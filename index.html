@@ -110,13 +110,12 @@
 
     <script>
         // --- 1. DATOS DEL CATÁLOGO (simulando productos.json) ---
-        // Nota: El 'precio_venta' es el precio final que incluye el costo del envío para el cliente.
         const PRODUCT_DATA = [
             {
                 id: 101,
                 nombre: "Sombrilla Playa 1.80m",
                 descripcion: "Ideal para jardín o playa. Gran tamaño, fácil de transportar.",
-                precio_venta: 990, // Precio final Nómada Box (ej. 837.90 + 150 envío)
+                precio_venta: 990,
                 imagen: "https://placehold.co/400x400/10B981/ffffff?text=Sombrilla",
                 categoria: "Deportes y Aire Libre"
             },
@@ -124,7 +123,7 @@
                 id: 102,
                 nombre: "Dispensador de Jabón 4 en 1",
                 descripcion: "Organizador de encimera multifuncional para cocina o baño.",
-                precio_venta: 550, // Precio final Nómada Box (ej. 387.90 + 150 envío)
+                precio_venta: 550,
                 imagen: "https://placehold.co/400x400/22C55E/ffffff?text=Dispensador",
                 categoria: "Hogar"
             },
@@ -160,10 +159,14 @@
                 imagen: "https://placehold.co/400x400/EF4444/ffffff?text=TicTacToe",
                 categoria: "Informática y Gamer"
             },
-            // Agrega más productos de ejemplo si es necesario
         ];
 
-        // --- 2. GESTIÓN DEL CARRITO (Local Storage) ---
+        // --- 2. VARIABLES GLOBALES DEL DOM ---
+        // Se inicializan aquí y se les asigna valor en initApp.
+        let productList, cartCountElement, checkoutButton, cartItemsContainer, emptyCartMessage, cartTotalElement;
+        let cartSidebar, cartOverlay;
+        
+        // --- 3. GESTIÓN DEL CARRITO (Local Storage) ---
         const WHATSAPP_NUMBER = "59899123456"; // Reemplaza con tu número de WhatsApp real (Ej: 59899123456)
         const cartKey = 'nomadabox_cart';
         
@@ -193,6 +196,7 @@
                 localStorage.setItem(cartKey, JSON.stringify(cart));
                 updateCartUI();
             } catch (error) {
+                // Este error se produce solo si hay problemas con localStorage (ej. cuota excedida)
                 console.error("Error al guardar el carrito en LocalStorage:", error);
             }
         };
@@ -211,7 +215,7 @@
             if (existingItem) {
                 existingItem.cantidad += 1;
             } else {
-                // Solo guardamos el ID y la cantidad en el LocalStorage para ahorrar espacio
+                // Solo guardamos el ID y la cantidad en el LocalStorage
                 cart.push({ id: productId, cantidad: 1 }); 
             }
 
@@ -239,18 +243,15 @@
             renderCartItems();
         };
 
-        // --- 3. RENDERING DE LA INTERFAZ DE USUARIO (UI) ---
+        // --- 4. RENDERING DE LA INTERFAZ DE USUARIO (UI) ---
 
         /**
          * Renderiza las tarjetas de productos en el catálogo.
+         * Usa la variable 'productList' inicializada en initApp.
          */
         const renderProducts = () => {
-            const productList = document.getElementById('product-list');
-            if (!productList) {
-                console.error("Error: Contenedor de productos no encontrado.");
-                return;
-            }
-            productList.innerHTML = ''; // Limpiar
+            // Ya verificamos la existencia de productList en initApp
+            productList.innerHTML = ''; 
             
             PRODUCT_DATA.forEach(product => {
                 const card = `
@@ -277,22 +278,14 @@
 
         /**
          * Actualiza el contador del carrito y el estado del botón de checkout.
+         * Usa las variables 'cartCountElement' y 'checkoutButton' inicializadas en initApp.
          */
         const updateCartUI = () => {
             const cart = getCart();
             const totalItems = cart.reduce((sum, item) => sum + item.cantidad, 0);
-            
-            const cartCountElement = document.getElementById('cart-count');
-            const checkoutButton = document.getElementById('checkout-button');
 
-            // VERIFICACIÓN DE NULIDAD
-            if (!cartCountElement || !checkoutButton) {
-                console.error("Error: Elementos UI del encabezado o botón de checkout no encontrados.");
-                return;
-            }
-
+            // Se asume que estos elementos existen gracias a la inicialización en initApp
             cartCountElement.textContent = totalItems;
-            
             checkoutButton.disabled = totalItems === 0;
             
             renderCartItems();
@@ -300,29 +293,27 @@
 
         /**
          * Renderiza los items en el panel lateral del carrito.
+         * Usa las variables 'cartItemsContainer', 'emptyCartMessage' y 'cartTotalElement' inicializadas en initApp.
          */
         const renderCartItems = () => {
             const cart = getCart();
-            const container = document.getElementById('cart-items-container');
-            const emptyMessage = document.getElementById('empty-cart-message');
-            const cartTotalElement = document.getElementById('cart-total');
             let total = 0;
             
-            // VERIFICACIÓN DE NULIDAD para evitar el error de acceso a la propiedad 'style'
-            if (!container || !emptyMessage || !cartTotalElement) {
-                console.error("Error: Elementos del carrito no encontrados en el DOM.");
+            // VERIFICACIÓN DE NULIDAD (aunque debería ser redundante post-initApp, se mantiene para robustez)
+            if (!cartItemsContainer || !emptyCartMessage || !cartTotalElement) {
+                console.error("Error: Elementos del carrito no inicializados. Deteniendo renderizado.");
                 return;
             }
 
-            container.innerHTML = '';
+            cartItemsContainer.innerHTML = '';
             
             if (cart.length === 0) {
-                emptyMessage.style.display = 'block';
+                emptyCartMessage.style.display = 'block';
                 cartTotalElement.textContent = '$U 0.00';
                 return;
             }
 
-            emptyMessage.style.display = 'none';
+            emptyCartMessage.style.display = 'none';
 
             cart.forEach(item => {
                 const subtotal = item.precio_venta * item.cantidad;
@@ -350,13 +341,13 @@
                         <span class="font-bold text-md w-20 text-right text-primary-600">$U ${subtotal.toLocaleString('es-UY')}</span>
                     </div>
                 `;
-                container.appendChild(cartItem);
+                cartItemsContainer.appendChild(cartItem);
             });
 
             cartTotalElement.textContent = `$U ${total.toLocaleString('es-UY')}`;
         };
 
-        // --- 4. LÓGICA DE CHECKOUT A WHATSAPP ---
+        // --- 5. LÓGICA DE CHECKOUT A WHATSAPP ---
 
         /**
          * Genera el mensaje del pedido y redirige a WhatsApp.
@@ -397,10 +388,7 @@
             // updateCartUI(); 
         };
 
-        // --- 5. LÓGICA DE LA SIDEBAR (Mostrar/Ocultar) ---
-
-        const cartSidebar = document.getElementById('cart-sidebar');
-        const cartOverlay = document.getElementById('cart-overlay');
+        // --- 6. LÓGICA DE LA SIDEBAR (Mostrar/Ocultar) ---
         
         const showCartSidebar = () => {
             if (!cartSidebar || !cartOverlay) return; // Null check
@@ -417,17 +405,33 @@
         };
 
 
-        // --- 6. INICIALIZACIÓN DE LA APLICACIÓN ---
+        // --- 7. INICIALIZACIÓN DE LA APLICACIÓN ---
 
         const initApp = () => {
+            // 1. OBTENER Y ASIGNAR TODOS LOS ELEMENTOS CRÍTICOS DEL DOM
+            productList = document.getElementById('product-list');
+            cartCountElement = document.getElementById('cart-count');
+            checkoutButton = document.getElementById('checkout-button');
+            cartItemsContainer = document.getElementById('cart-items-container');
+            emptyCartMessage = document.getElementById('empty-cart-message');
+            cartTotalElement = document.getElementById('cart-total');
+            cartSidebar = document.getElementById('cart-sidebar');
+            cartOverlay = document.getElementById('cart-overlay');
+            
+            // Verificación crítica al inicio
+            if (!productList || !cartItemsContainer || !cartTotalElement || !cartSidebar || !cartOverlay) {
+                console.error("Error FATAL: No se pudieron encontrar los contenedores principales. Verifique los IDs del HTML.");
+                return;
+            }
+
             renderProducts();
             updateCartUI(); // Carga el estado inicial del carrito
             
-            // Event Listeners
-            document.getElementById('cart-button')?.addEventListener('click', showCartSidebar);
-            document.getElementById('close-cart-button')?.addEventListener('click', hideCartSidebar);
-            document.getElementById('cart-overlay')?.addEventListener('click', hideCartSidebar);
-            document.getElementById('checkout-button')?.addEventListener('click', checkoutToWhatsApp);
+            // Event Listeners (usando los elementos obtenidos)
+            document.getElementById('cart-button').addEventListener('click', showCartSidebar);
+            document.getElementById('close-cart-button').addEventListener('click', hideCartSidebar);
+            cartOverlay.addEventListener('click', hideCartSidebar);
+            checkoutButton.addEventListener('click', checkoutToWhatsApp);
         };
 
         // Inicia la aplicación al cargar la página
