@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NÓMADA BOX - Todo lo que necesitas, envío gratis</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7;
+        }
+        /* Estilos personalizados para el carrito lateral */
+        #cart-sidebar {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(100%); /* Oculto por defecto */
+        }
+        #cart-sidebar.open {
+            transform: translateX(0); /* Muestra */
+        }
+        .cart-item-list {
+            max-height: calc(100vh - 250px); /* Altura máxima para scroll */
+            overflow-y: auto;
+        }
+        .text-primary-600 { color: #10B981; } /* Un color verde vibrante */
+        .bg-primary-600 { background-color: #10B981; }
+        .hover:bg-primary-700:hover { background-color: #059669; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Encabezado Fijo (Header) -->
+    <header class="sticky top-0 z-40 bg-white shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <!-- Logo NÓMADA BOX -->
+            <h1 class="text-3xl font-extrabold text-gray-800">
+                <span class="text-primary-600">NÓMADA</span> BOX
+            </h1>
+            <!-- Botón del Carrito -->
+            <button id="cart-button" class="relative p-2 bg-primary-600 text-white rounded-full shadow-lg hover:bg-primary-700 transition duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">0</span>
+            </button>
+        </div>
+        <div class="bg-primary-600 py-1 text-white text-center text-sm font-semibold">
+            🎁 ENVÍO GRATIS EN TODOS LOS PRODUCTOS - Sin costos ocultos.
+        </div>
+    </header>
+
+    <!-- Contenido Principal (Catálogo) -->
+    <main class="container mx-auto px-4 py-8">
+        <h2 class="text-4xl font-bold mb-8 text-gray-800 text-center">Catálogo NÓMADA BOX</h2>
+        
+        <!-- Contenedor de Productos (Grid Responsivo) -->
+        <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Las tarjetas de productos se inyectarán aquí por JavaScript -->
+        </div>
+    </main>
+
+    <!-- Panel Lateral del Carrito (Sidebar) -->
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-screen w-full sm:w-96 bg-white shadow-2xl z-50 p-6 flex flex-col justify-between border-l-4 border-primary-600">
+        <!-- Encabezado del Carrito -->
+        <div>
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <h3 class="text-2xl font-bold text-gray-800 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Tu Pedido
+                </h3>
+                <button id="close-cart-button" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Lista de Artículos del Carrito -->
+            <div class="cart-item-list" id="cart-items-container">
+                <p id="empty-cart-message" class="text-center text-gray-500 mt-10">Tu caja está vacía.</p>
+                <!-- Los artículos se inyectarán aquí por JavaScript -->
+            </div>
+        </div>
+
+        <!-- Pie de Carrito (Totales y Botón de Checkout) -->
+        <div class="mt-6 pt-6 border-t border-gray-200">
+            <div class="flex justify-between items-center text-xl font-semibold mb-4">
+                <span>Total Final:</span>
+                <span id="cart-total" class="text-primary-600">$U 0.00</span>
+            </div>
+            <p class="text-sm text-center text-gray-500 mb-4">
+                El precio total ya incluye el costo de envío a cualquier parte de Uruguay.
+            </p>
+            <button id="checkout-button" class="w-full py-3 bg-green-500 text-white font-bold rounded-xl shadow-md hover:bg-green-600 transition duration-300 flex items-center justify-center disabled:opacity-50" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 21L15 15M17 17l4 4" />
+                </svg>
+                Confirmar Pedido por WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay de Fondo -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black opacity-0 z-40 pointer-events-none transition-opacity duration-300"></div>
+
+
+    <script>
+        // --- 1. DATOS DEL CATÁLOGO (simulando productos.json) ---
+        // Nota: El 'precio_venta' es el precio final que incluye el costo del envío para el cliente.
+        const PRODUCT_DATA = [
+            {
+                id: 101,
+                nombre: "Sombrilla Playa 1.80m",
+                descripcion: "Ideal para jardín o playa. Gran tamaño, fácil de transportar.",
+                precio_venta: 990, // Precio final Nómada Box (ej. 837.90 + 150 envío)
+                imagen: "https://placehold.co/400x400/10B981/ffffff?text=Sombrilla",
+                categoria: "Deportes y Aire Libre"
+            },
+            {
+                id: 102,
+                nombre: "Dispensador de Jabón 4 en 1",
+                descripcion: "Organizador de encimera multifuncional para cocina o baño.",
+                precio_venta: 550, // Precio final Nómada Box (ej. 387.90 + 150 envío)
+                imagen: "https://placehold.co/400x400/22C55E/ffffff?text=Dispensador",
+                categoria: "Hogar"
+            },
+            {
+                id: 103,
+                nombre: "Cepillo Limpiador Eléctrico",
+                descripcion: "Inalámbrico con 7 cabezales para limpieza profunda del hogar.",
+                precio_venta: 899,
+                imagen: "https://placehold.co/400x400/3B82F6/ffffff?text=Cepillo",
+                categoria: "Hogar"
+            },
+            {
+                id: 104,
+                nombre: "Masajeador Facial Microcorriente",
+                descripcion: "Reafirmante y tonificante, ideal para el cuidado personal diario.",
+                precio_venta: 450,
+                imagen: "https://placehold.co/400x400/9333EA/ffffff?text=Masajeador",
+                categoria: "Cuidado Personal"
+            },
+            {
+                id: 105,
+                nombre: "Lona de Camping 6 x 4 m",
+                descripcion: "Resistente e impermeable, perfecta para actividades al aire libre.",
+                precio_venta: 890,
+                imagen: "https://placehold.co/400x400/F97316/ffffff?text=Lona",
+                categoria: "Deportes y Aire Libre"
+            },
+            {
+                id: 106,
+                nombre: "Juego Electrónico de Tic-Tac",
+                descripcion: "Juego de mesa clásico en versión electrónica portátil.",
+                precio_venta: 700,
+                imagen: "https://placehold.co/400x400/EF4444/ffffff?text=TicTacToe",
+                categoria: "Informática y Gamer"
+            },
+            // Agrega más productos de ejemplo si es necesario
+        ];
+
+        // --- 2. GESTIÓN DEL CARRITO (Local Storage) ---
+        const WHATSAPP_NUMBER = "59899123456"; // Reemplaza con tu número de WhatsApp real (Ej: 59899123456)
+        const cartKey = 'nomadabox_cart';
+        
+        /**
+         * Obtiene el carrito del LocalStorage o devuelve un array vacío.
+         */
+        const getCart = () => {
+            try {
+                const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+                return cart.map(item => ({
+                    ...item,
+                    // Asegura que todos los productos del carrito tengan los datos actualizados
+                    ...PRODUCT_DATA.find(p => p.id === item.id)
+                }));
+            } catch (error) {
+                console.error("Error al obtener el carrito de LocalStorage:", error);
+                return [];
+            }
+        };
+
+        /**
+         * Guarda el carrito en el LocalStorage.
+         * @param {Array} cart - El carrito a guardar.
+         */
+        const saveCart = (cart) => {
+            try {
+                localStorage.setItem(cartKey, JSON.stringify(cart));
+                updateCartUI();
+            } catch (error) {
+                console.error("Error al guardar el carrito en LocalStorage:", error);
+            }
+        };
+
+        /**
+         * Añade un producto al carrito.
+         * @param {number} productId - El ID del producto a añadir.
+         */
+        window.addToCart = (productId) => {
+            const product = PRODUCT_DATA.find(p => p.id === productId);
+            if (!product) return;
+
+            let cart = getCart();
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.cantidad += 1;
+            } else {
+                cart.push({ id: productId, cantidad: 1 });
+            }
+
+            saveCart(cart);
+            showCartSidebar();
+            console.log(`Producto añadido: ${product.nombre}`);
+        };
+        
+        /**
+         * Actualiza la cantidad en el carrito o lo elimina si la cantidad es 0.
+         * @param {number} productId - El ID del producto.
+         * @param {number} newQuantity - La nueva cantidad.
+         */
+        window.updateQuantity = (productId, newQuantity) => {
+            let cart = getCart();
+            if (newQuantity <= 0) {
+                cart = cart.filter(item => item.id !== productId);
+            } else {
+                const item = cart.find(item => item.id === productId);
+                if (item) {
+                    item.cantidad = newQuantity;
+                }
+            }
+            saveCart(cart);
+            renderCartItems();
+        };
+
+        // --- 3. RENDERING DE LA INTERFAZ DE USUARIO (UI) ---
+
+        /**
+         * Renderiza las tarjetas de productos en el catálogo.
+         */
+        const renderProducts = () => {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = ''; // Limpiar
+            
+            PRODUCT_DATA.forEach(product => {
+                const card = `
+                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300 flex flex-col justify-between">
+                        <!-- Placeholder de Imagen -->
+                        <img src="${product.imagen}" alt="${product.nombre}" class="w-full h-48 object-cover rounded-t-xl onerror="this.onerror=null; this.src='https://placehold.co/400x400/cccccc/000000?text=N%C3%93MADA+BOX';"/>
+                        
+                        <div class="p-5 flex flex-col flex-grow">
+                            <span class="text-xs font-semibold text-primary-600 mb-1">${product.categoria}</span>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">${product.nombre}</h3>
+                            <p class="text-sm text-gray-500 mb-3 flex-grow">${product.descripcion}</p>
+                            <div class="flex justify-between items-center mt-auto">
+                                <span class="text-2xl font-extrabold text-primary-600">$U ${product.precio_venta.toLocaleString('es-UY')}</span>
+                                <button onclick="addToCart(${product.id})" class="ml-4 px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition duration-300 shadow-md text-sm">
+                                    Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                productList.innerHTML += card;
+            });
+        };
+
+        /**
+         * Actualiza el contador del carrito y el estado del botón de checkout.
+         */
+        const updateCartUI = () => {
+            const cart = getCart();
+            const totalItems = cart.reduce((sum, item) => sum + item.cantidad, 0);
+            document.getElementById('cart-count').textContent = totalItems;
+            
+            const checkoutButton = document.getElementById('checkout-button');
+            checkoutButton.disabled = totalItems === 0;
+            
+            renderCartItems();
+        };
+
+        /**
+         * Renderiza los items en el panel lateral del carrito.
+         */
+        const renderCartItems = () => {
+            const cart = getCart();
+            const container = document.getElementById('cart-items-container');
+            const emptyMessage = document.getElementById('empty-cart-message');
+            const cartTotalElement = document.getElementById('cart-total');
+            let total = 0;
+            
+            container.innerHTML = '';
+            
+            if (cart.length === 0) {
+                emptyMessage.style.display = 'block';
+                cartTotalElement.textContent = '$U 0.00';
+                return;
+            }
+
+            emptyMessage.style.display = 'none';
+
+            cart.forEach(item => {
+                const subtotal = item.precio_venta * item.cantidad;
+                total += subtotal;
+                
+                const cartItem = document.createElement('div');
+                cartItem.className = 'flex items-center justify-between p-3 mb-3 bg-gray-50 rounded-lg shadow-sm';
+                cartItem.innerHTML = `
+                    <div class="flex items-center flex-grow">
+                        <img src="${item.imagen}" alt="${item.nombre}" class="w-12 h-12 object-cover rounded-md mr-3" onerror="this.onerror=null; this.src='https://placehold.co/50x50/cccccc/000000?text=Box';"/>
+                        <div class="flex-grow">
+                            <p class="font-semibold text-sm text-gray-800">${item.nombre}</p>
+                            <p class="text-xs text-gray-500">Precio unitario: $U ${item.precio_venta.toLocaleString('es-UY')}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <!-- Control de Cantidad -->
+                        <div class="flex border border-gray-300 rounded-lg overflow-hidden mr-3">
+                            <button onclick="updateQuantity(${item.id}, ${item.cantidad - 1})" class="px-2 py-1 bg-white hover:bg-gray-100 text-gray-600">-</button>
+                            <span class="px-3 py-1 bg-white border-l border-r text-gray-800">${item.cantidad}</span>
+                            <button onclick="updateQuantity(${item.id}, ${item.cantidad + 1})" class="px-2 py-1 bg-white hover:bg-gray-100 text-gray-600">+</button>
+                        </div>
+                        
+                        <span class="font-bold text-md w-20 text-right text-primary-600">$U ${subtotal.toLocaleString('es-UY')}</span>
+                    </div>
+                `;
+                container.appendChild(cartItem);
+            });
+
+            cartTotalElement.textContent = `$U ${total.toLocaleString('es-UY')}`;
+        };
+
+        // --- 4. LÓGICA DE CHECKOUT A WHATSAPP ---
+
+        /**
+         * Genera el mensaje del pedido y redirige a WhatsApp.
+         */
+        const checkoutToWhatsApp = () => {
+            const cart = getCart();
+            if (cart.length === 0) return;
+
+            let message = "¡Hola NÓMADA BOX! Quiero confirmar mi pedido:\n\n";
+            let total = 0;
+
+            // 1. Detalles de los productos
+            cart.forEach(item => {
+                const subtotal = item.precio_venta * item.cantidad;
+                message += `${item.cantidad} x ${item.nombre} \n    (Subtotal: $U ${subtotal.toLocaleString('es-UY')})\n`;
+                total += subtotal;
+            });
+
+            // 2. Resumen y método de pago
+            message += `\n----------------------------------\n`;
+            message += `TOTAL FINAL A PAGAR: $U ${total.toLocaleString('es-UY')}\n`;
+            message += `(¡El envío ya está incluido!)\n\n`;
+            message += `Por favor, envíenme los datos de la cuenta bancaria para realizar la transferencia y coordinar la entrega.\n`;
+            message += `\n----------------------------------\n`;
+            message += `Mis datos de envío (favor completar):\n`;
+            message += `Nombre completo: \n`;
+            message += `Cédula: \n`;
+            message += `Dirección completa (Calle, Nro., Apto/Casa, Ciudad): \n`;
+            message += `Teléfono de contacto: \n`;
+
+            // Codificar el mensaje para la URL
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+
+            // Redirigir y limpiar el carrito
+            window.open(whatsappUrl, '_blank');
+            // localStorage.removeItem(cartKey); // Opcional: Limpiar el carrito después de la compra
+            // updateCartUI(); 
+        };
+
+        // --- 5. LÓGICA DE LA SIDEBAR (Mostrar/Ocultar) ---
+
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartOverlay = document.getElementById('cart-overlay');
+        
+        const showCartSidebar = () => {
+            cartSidebar.classList.add('open');
+            cartOverlay.classList.remove('opacity-0', 'pointer-events-none');
+            cartOverlay.classList.add('opacity-50');
+        };
+
+        const hideCartSidebar = () => {
+            cartSidebar.classList.remove('open');
+            cartOverlay.classList.remove('opacity-50');
+            cartOverlay.classList.add('opacity-0', 'pointer-events-none');
+        };
+
+
+        // --- 6. INICIALIZACIÓN DE LA APLICACIÓN ---
+
+        const initApp = () => {
+            renderProducts();
+            updateCartUI(); // Carga el estado inicial del carrito
+            
+            // Event Listeners
+            document.getElementById('cart-button').addEventListener('click', showCartSidebar);
+            document.getElementById('close-cart-button').addEventListener('click', hideCartSidebar);
+            document.getElementById('cart-overlay').addEventListener('click', hideCartSidebar);
+            document.getElementById('checkout-button').addEventListener('click', checkoutToWhatsApp);
+        };
+
+        // Inicia la aplicación al cargar la página
+        window.onload = initApp;
+
+    </script>
+</body>
+</html>
