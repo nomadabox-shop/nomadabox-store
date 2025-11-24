@@ -173,9 +173,9 @@
         const getCart = () => {
             try {
                 const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+                // Se asegura de que todos los productos del carrito tengan los datos actualizados
                 return cart.map(item => ({
                     ...item,
-                    // Asegura que todos los productos del carrito tengan los datos actualizados
                     ...PRODUCT_DATA.find(p => p.id === item.id)
                 }));
             } catch (error) {
@@ -211,7 +211,8 @@
             if (existingItem) {
                 existingItem.cantidad += 1;
             } else {
-                cart.push({ id: productId, cantidad: 1 });
+                // Solo guardamos el ID y la cantidad en el LocalStorage para ahorrar espacio
+                cart.push({ id: productId, cantidad: 1 }); 
             }
 
             saveCart(cart);
@@ -245,13 +246,17 @@
          */
         const renderProducts = () => {
             const productList = document.getElementById('product-list');
+            if (!productList) {
+                console.error("Error: Contenedor de productos no encontrado.");
+                return;
+            }
             productList.innerHTML = ''; // Limpiar
             
             PRODUCT_DATA.forEach(product => {
                 const card = `
                     <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300 flex flex-col justify-between">
                         <!-- Placeholder de Imagen -->
-                        <img src="${product.imagen}" alt="${product.nombre}" class="w-full h-48 object-cover rounded-t-xl onerror="this.onerror=null; this.src='https://placehold.co/400x400/cccccc/000000?text=N%C3%93MADA+BOX';"/>
+                        <img src="${product.imagen}" alt="${product.nombre}" class="w-full h-48 object-cover rounded-t-xl" onerror="this.onerror=null; this.src='https://placehold.co/400x400/cccccc/000000?text=N%C3%93MADA+BOX';"/>
                         
                         <div class="p-5 flex flex-col flex-grow">
                             <span class="text-xs font-semibold text-primary-600 mb-1">${product.categoria}</span>
@@ -276,9 +281,18 @@
         const updateCartUI = () => {
             const cart = getCart();
             const totalItems = cart.reduce((sum, item) => sum + item.cantidad, 0);
-            document.getElementById('cart-count').textContent = totalItems;
             
+            const cartCountElement = document.getElementById('cart-count');
             const checkoutButton = document.getElementById('checkout-button');
+
+            // VERIFICACIÓN DE NULIDAD
+            if (!cartCountElement || !checkoutButton) {
+                console.error("Error: Elementos UI del encabezado o botón de checkout no encontrados.");
+                return;
+            }
+
+            cartCountElement.textContent = totalItems;
+            
             checkoutButton.disabled = totalItems === 0;
             
             renderCartItems();
@@ -294,6 +308,12 @@
             const cartTotalElement = document.getElementById('cart-total');
             let total = 0;
             
+            // VERIFICACIÓN DE NULIDAD para evitar el error de acceso a la propiedad 'style'
+            if (!container || !emptyMessage || !cartTotalElement) {
+                console.error("Error: Elementos del carrito no encontrados en el DOM.");
+                return;
+            }
+
             container.innerHTML = '';
             
             if (cart.length === 0) {
@@ -383,12 +403,14 @@
         const cartOverlay = document.getElementById('cart-overlay');
         
         const showCartSidebar = () => {
+            if (!cartSidebar || !cartOverlay) return; // Null check
             cartSidebar.classList.add('open');
             cartOverlay.classList.remove('opacity-0', 'pointer-events-none');
             cartOverlay.classList.add('opacity-50');
         };
 
         const hideCartSidebar = () => {
+            if (!cartSidebar || !cartOverlay) return; // Null check
             cartSidebar.classList.remove('open');
             cartOverlay.classList.remove('opacity-50');
             cartOverlay.classList.add('opacity-0', 'pointer-events-none');
@@ -402,10 +424,10 @@
             updateCartUI(); // Carga el estado inicial del carrito
             
             // Event Listeners
-            document.getElementById('cart-button').addEventListener('click', showCartSidebar);
-            document.getElementById('close-cart-button').addEventListener('click', hideCartSidebar);
-            document.getElementById('cart-overlay').addEventListener('click', hideCartSidebar);
-            document.getElementById('checkout-button').addEventListener('click', checkoutToWhatsApp);
+            document.getElementById('cart-button')?.addEventListener('click', showCartSidebar);
+            document.getElementById('close-cart-button')?.addEventListener('click', hideCartSidebar);
+            document.getElementById('cart-overlay')?.addEventListener('click', hideCartSidebar);
+            document.getElementById('checkout-button')?.addEventListener('click', checkoutToWhatsApp);
         };
 
         // Inicia la aplicación al cargar la página
