@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOMADABOX | Future Shopping</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2384cc16%22/><text y=%22.9em%22 font-size=%2290%22 x=%2250%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22 font-weight=%22bold%22>N</text></svg>">
     
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -22,17 +23,11 @@
                 extend: {
                     fontFamily: { sans: ['Outfit', 'sans-serif'] },
                     colors: {
-                        lime: {
-                            400: '#a3e635',
-                            500: '#84cc16', // Tu Verde Manzana
-                            600: '#65a30d',
-                        },
-                        dark: '#0f172a'
+                        lime: { 400: '#a3e635', 500: '#84cc16', 600: '#65a30d' },
                     },
                     animation: {
                         'blob': 'blob 7s infinite',
                         'float': 'float 6s ease-in-out infinite',
-                        'shimmer': 'shimmer 2s linear infinite',
                     },
                     keyframes: {
                         blob: {
@@ -51,48 +46,11 @@
         }
     </script>
     <style>
-        /* Estilos base */
-        body { 
-            background-color: #f0f2f5; 
-            overflow-x: hidden;
-        }
-        
-        /* Glassmorphism Classes */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
-        }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.7);
-            border-color: #84cc16;
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px -10px rgba(132, 204, 22, 0.3);
-        }
-
-        .text-gradient {
-            background: linear-gradient(135deg, #1a1a1a 0%, #4d4d4d 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%);
-            box-shadow: 0 4px 15px rgba(132, 204, 22, 0.4);
-        }
-
-        /* Ocultar scrollbar pero permitir scroll */
+        body { background-color: #f0f2f5; overflow-x: hidden; }
+        .glass-panel { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07); }
+        .glass-card { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); transition: all 0.4s ease; }
+        .glass-card:hover { background: rgba(255, 255, 255, 0.7); border-color: #84cc16; transform: translateY(-5px); box-shadow: 0 15px 30px -5px rgba(132, 204, 22, 0.2); }
+        .btn-primary { background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%); box-shadow: 0 4px 15px rgba(132, 204, 22, 0.4); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -101,183 +59,290 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useMemo } = React;
 
-        // --- CONSTANTES ---
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMwxXL0sZMSK-AVLVWjKuC8SW4s5IAUzescfV7F3i-25dwed9dz0IXF0Qydja1x4mzxmHvwO4B7I84/pub?gid=0&single=true&output=csv";
         const WHATSAPP = "59895736428"; 
+        const INSTAGRAM_URL = "https://www.instagram.com/nomadabox_shop/";
 
-        // --- COMPONENTES VISUALES ---
+        // --- COMPONENTES ---
 
-        // Fondo animado con "blobs" de color
         const AnimatedBackground = () => (
             <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-lime-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
                 <div className="absolute top-0 right-1/4 w-96 h-96 bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-                <div className="absolute -bottom-32 left-1/3 w-96 h-96 bg-lime-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
             </div>
         );
 
-        const Navbar = ({ cartCount, onOpenCart }) => (
-            <nav className="fixed top-0 w-full z-50 transition-all duration-300">
-                <div className="glass-panel mx-4 mt-4 rounded-2xl px-6 py-4 flex justify-between items-center shadow-lg">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-lime-500 to-lime-400 flex items-center justify-center text-white font-black text-xl shadow-lime-500/50 shadow-lg">
-                            N
+        const Navbar = ({ cartCount, onOpenCart, onOpenMobileMenu, categories, selectedCategory, onSelectCategory, onSearch, searchQuery }) => {
+            const [isSearchOpen, setIsSearchOpen] = useState(false);
+            const inputRef = React.useRef(null);
+
+            useEffect(() => {
+                if (isSearchOpen && inputRef.current) inputRef.current.focus();
+            }, [isSearchOpen]);
+
+            return (
+                <nav className="fixed top-0 w-full z-50 transition-all duration-300">
+                    <div className="glass-panel mx-2 md:mx-4 mt-2 md:mt-4 rounded-2xl px-4 md:px-6 py-3 md:py-4 flex justify-between items-center shadow-lg relative">
+                        
+                        {/* IZQUIERDA: Logo / Botón Móvil */}
+                        <div className="flex items-center gap-3 md:gap-6">
+                            <button 
+                                onClick={onOpenMobileMenu}
+                                className="w-10 h-10 rounded-xl bg-gradient-to-tr from-lime-500 to-lime-400 flex items-center justify-center text-white font-black text-xl shadow-lime-500/50 shadow-lg md:cursor-default hover:scale-105 active:scale-95 transition-transform"
+                            >
+                                N
+                            </button>
+                            
+                            {/* Desktop Category Links */}
+                            <div className="hidden md:flex gap-1 overflow-x-auto no-scrollbar max-w-md">
+                                <button 
+                                    onClick={() => onSelectCategory('Todas')}
+                                    className={`px-3 py-1 rounded-full text-sm font-bold transition-all ${selectedCategory === 'Todas' ? 'bg-lime-100 text-lime-700' : 'text-slate-500 hover:bg-slate-100'}`}
+                                >
+                                    Todas
+                                </button>
+                                {categories.map(cat => (
+                                    <button 
+                                        key={cat}
+                                        onClick={() => onSelectCategory(cat)}
+                                        className={`px-3 py-1 rounded-full text-sm font-bold transition-all whitespace-nowrap ${selectedCategory === cat ? 'bg-lime-100 text-lime-700' : 'text-slate-500 hover:bg-slate-100'}`}
+                                    >
+                                        {cat}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                        <h1 className="text-2xl font-black tracking-tighter text-slate-800">
+
+                        {/* CENTRO: Logo Texto (Solo Mobile) */}
+                        <div className="md:hidden absolute left-1/2 transform -translate-x-1/2 font-black text-lg tracking-tighter">
                             NOMADA<span className="text-lime-600">BOX</span>
-                        </h1>
+                        </div>
+
+                        {/* DERECHA: Acciones */}
+                        <div className="flex items-center gap-3">
+                            
+                            {/* Buscador Desktop */}
+                            <div className="hidden md:flex items-center relative">
+                                <div className={`overflow-hidden transition-all duration-300 ease-out ${isSearchOpen ? 'w-64 opacity-100 mr-2' : 'w-0 opacity-0'}`}>
+                                    <input 
+                                        ref={inputRef}
+                                        type="text" 
+                                        placeholder="Buscar..." 
+                                        value={searchQuery}
+                                        onChange={(e) => onSearch(e.target.value)}
+                                        onBlur={() => !searchQuery && setIsSearchOpen(false)}
+                                        className="w-full bg-slate-100 border-none rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-lime-500 outline-none"
+                                    />
+                                </div>
+                                <button 
+                                    onClick={() => setIsSearchOpen(!isSearchOpen)}
+                                    className="w-10 h-10 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-600 transition-colors"
+                                >
+                                    <i className={`ph ${isSearchOpen ? 'ph-x' : 'ph-magnifying-glass'} text-xl`}></i>
+                                </button>
+                            </div>
+
+                            {/* Badge Envío (Desktop) */}
+                            <span className="hidden lg:block text-[10px] font-bold bg-white/50 px-3 py-1.5 rounded-full border border-white/60 text-slate-500 uppercase tracking-wide">
+                                🚚 Envío Incluido
+                            </span>
+
+                            {/* Carrito */}
+                            <button 
+                                onClick={onOpenCart} 
+                                className="relative w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white border border-white flex items-center justify-center shadow-sm hover:shadow-md transition-all group"
+                            >
+                                <i className="ph ph-shopping-bag text-xl md:text-2xl text-slate-700 group-hover:text-lime-600 transition-colors"></i>
+                                {cartCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 md:-top-2 md:-right-2 w-5 h-5 md:w-6 md:h-6 bg-lime-500 text-white text-[10px] md:text-xs font-bold rounded-full flex items-center justify-center shadow-lg animate-bounce border-2 border-white">
+                                        {cartCount}
+                                    </span>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+            );
+        };
+
+        const MobileMenu = ({ isOpen, onClose, categories, selectedCategory, onSelectCategory, onSearch, searchQuery }) => (
+            <div className={`fixed inset-0 z-[60] bg-white/95 backdrop-blur-xl transition-all duration-500 ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full pointer-events-none'}`}>
+                <div className="p-6 flex flex-col h-full">
+                    <div className="flex justify-between items-center mb-8">
+                        <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center text-white font-bold">N</div>
+                            <span className="font-black text-xl">Menú</span>
+                        </div>
+                        <button onClick={onClose} className="p-2 bg-slate-100 rounded-full"><i className="ph ph-x text-xl"></i></button>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <span className="hidden md:block text-xs font-bold bg-white/50 px-3 py-1 rounded-full border border-white/60 text-slate-500">
-                            🚚 ENVÍO INCLUIDO SIEMPRE
-                        </span>
+                    <div className="mb-8">
+                        <div className="relative">
+                            <i className="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl"></i>
+                            <input 
+                                type="text" 
+                                placeholder="¿Qué estás buscando?" 
+                                value={searchQuery}
+                                onChange={(e) => onSearch(e.target.value)}
+                                className="w-full bg-slate-100 border-none rounded-2xl pl-12 pr-4 py-4 text-lg font-medium focus:ring-2 focus:ring-lime-500 outline-none"
+                            />
+                        </div>
+                    </div>
+
+                    <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Categorías</h3>
+                    <div className="flex flex-col gap-2 overflow-y-auto flex-1">
                         <button 
-                            onClick={onOpenCart} 
-                            className="relative w-12 h-12 rounded-xl bg-white border border-white flex items-center justify-center shadow-sm hover:shadow-md transition-all group"
+                            onClick={() => { onSelectCategory('Todas'); onClose(); }}
+                            className={`p-4 rounded-xl text-left font-bold text-lg transition-all ${selectedCategory === 'Todas' ? 'bg-lime-100 text-lime-700' : 'hover:bg-slate-50 text-slate-700'}`}
                         >
-                            <i className="ph ph-shopping-bag text-2xl text-slate-700 group-hover:text-lime-600 transition-colors"></i>
-                            {cartCount > 0 && (
-                                <span className="absolute -top-2 -right-2 w-6 h-6 bg-lime-500 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg animate-bounce border-2 border-white">
-                                    {cartCount}
-                                </span>
-                            )}
+                            Todas los productos
                         </button>
+                        {categories.map(cat => (
+                            <button 
+                                key={cat}
+                                onClick={() => { onSelectCategory(cat); onClose(); }}
+                                className={`p-4 rounded-xl text-left font-bold text-lg transition-all ${selectedCategory === cat ? 'bg-lime-100 text-lime-700' : 'hover:bg-slate-50 text-slate-700'}`}
+                            >
+                                {cat}
+                            </button>
+                        ))}
                     </div>
                 </div>
-            </nav>
+            </div>
         );
 
         const Hero = () => (
-            <header className="pt-40 pb-20 px-4 container mx-auto text-center relative">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel mb-8 animate-float">
+            <header className="pt-32 pb-10 px-4 container mx-auto text-center relative">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel mb-6 animate-float">
                     <span className="w-2 h-2 rounded-full bg-lime-500 animate-pulse"></span>
-                    <span className="text-xs font-bold uppercase tracking-widest text-slate-500">La nueva forma de comprar</span>
+                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500">Envío Gratis • Todo Uruguay</span>
                 </div>
                 
-                <h2 className="text-5xl md:text-8xl font-black mb-6 tracking-tight leading-none text-slate-800">
+                <h2 className="text-4xl md:text-7xl font-black mb-4 tracking-tight leading-none text-slate-800">
                     Tu mundo,<br/>
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-500 to-emerald-600">puesto en casa.</span>
                 </h2>
                 
-                <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto mb-10 font-light">
-                    Todo lo que necesitas, en la caja que te sigue. Sin sorpresas, sin costos ocultos.
+                <p className="text-lg md:text-xl text-slate-500 max-w-xl mx-auto mb-8 font-light leading-relaxed">
+                    Todo lo que necesitas, en la caja que te sigue. <br className="hidden md:block"/> Sin sorpresas, sin costos ocultos.
                 </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
-                    {[
-                        { t: "Misión", d: "Hogar y tecnología accesible para cada uruguayo.", i: "ph-house-line" },
-                        { t: "Visión", d: "Referente en rapidez y transparencia de precios.", i: "ph-eye" },
-                        { t: "Valores", d: "Claridad radical, agilidad nómada e ingenio.", i: "ph-diamond" }
-                    ].map((item, idx) => (
-                        <div key={idx} className="glass-panel p-6 rounded-3xl text-left hover:bg-white/80 transition-colors">
-                            <div className="w-12 h-12 rounded-2xl bg-lime-100 text-lime-600 flex items-center justify-center text-2xl mb-4">
-                                <i className={`ph ${item.i}`}></i>
-                            </div>
-                            <h3 className="font-bold text-lg text-slate-800 mb-1">{item.t}</h3>
-                            <p className="text-sm text-slate-500 leading-relaxed">{item.d}</p>
-                        </div>
-                    ))}
-                </div>
             </header>
         );
 
         const ProductCard = ({ product, onAdd }) => (
-            <div className="glass-card rounded-[2rem] p-4 flex flex-col h-full relative group overflow-hidden">
-                {/* Etiqueta de Categoría Flotante */}
-                <div className="absolute top-6 left-6 z-10">
-                    <span className="px-3 py-1 bg-white/90 backdrop-blur rounded-lg text-xs font-bold text-slate-600 shadow-sm border border-white/50">
-                        {product.categoria}
-                    </span>
-                </div>
-
-                {/* Imagen con efecto Zoom */}
-                <div className="relative h-64 mb-5 rounded-[1.5rem] overflow-hidden bg-white">
+            <div className="glass-card rounded-[2rem] p-3 flex flex-col h-full relative group">
+                <div className="relative h-48 md:h-60 mb-3 rounded-[1.5rem] overflow-hidden bg-white">
                     <img 
                         src={product.imagen} 
                         alt={product.nombre} 
                         className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-700 ease-in-out"
-                        onError={(e) => {
-                            e.target.src = 'https://placehold.co/400x400/f1f5f9/94a3b8?text=Sin+Imagen';
-                            e.target.style.objectFit = 'cover';
-                        }}
+                        onError={(e) => { e.target.src = 'https://placehold.co/400x400/f1f5f9/94a3b8?text=Sin+Imagen'; }}
                     />
+                    <div className="absolute top-3 left-3">
+                        <span className="px-2 py-1 bg-white/90 backdrop-blur rounded-lg text-[10px] font-bold text-slate-600 border border-slate-100 shadow-sm">
+                            {product.categoria}
+                        </span>
+                    </div>
                 </div>
                 
-                <div className="flex flex-col flex-grow">
-                    <h3 className="text-xl font-bold text-slate-800 mb-2 leading-tight">{product.nombre}</h3>
-                    <p className="text-sm text-slate-500 mb-4 line-clamp-2 font-light">{product.descripcion}</p>
-                    
+                <div className="flex flex-col flex-grow px-1">
+                    <h3 className="text-lg md:text-xl font-bold text-slate-800 mb-1 leading-tight">{product.nombre}</h3>
                     <div className="mt-auto flex items-end justify-between">
                         <div>
-                            <span className="text-xs font-semibold text-lime-600 uppercase tracking-wider block mb-1">Precio Final</span>
-                            <span className="text-3xl font-black text-slate-800 tracking-tight">$U {parseInt(product.precio).toLocaleString('es-UY')}</span>
+                            <span className="text-[10px] font-bold text-lime-600 uppercase tracking-wider block">Precio Final</span>
+                            <span className="text-2xl font-black text-slate-800">$U {parseInt(product.precio).toLocaleString('es-UY')}</span>
                         </div>
                         <button 
                             onClick={() => onAdd(product)}
-                            className="w-14 h-14 rounded-2xl btn-primary text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300"
+                            className="w-10 h-10 md:w-12 md:h-12 rounded-xl btn-primary text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all"
                         >
-                            <i className="ph ph-plus text-2xl font-bold"></i>
+                            <i className="ph ph-plus text-xl font-bold"></i>
                         </button>
                     </div>
                 </div>
             </div>
         );
 
-        const CartSidebar = ({ isOpen, onClose, cart, updateQty, total, onCheckout }) => (
-            <>
-                <div 
-                    className={`fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] transition-opacity duration-500 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-                    onClick={onClose}
-                />
-                <div className={`fixed top-0 right-0 h-full w-full max-w-md bg-white/90 backdrop-blur-xl z-[70] shadow-2xl transform transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) ${isOpen ? 'translate-x-0' : 'translate-x-full'} flex flex-col border-l border-white/50`}>
-                    <div className="p-8 pb-4 flex justify-between items-center">
-                        <h2 className="text-3xl font-black text-slate-800">Tu Caja</h2>
-                        <button onClick={onClose} className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors"><i className="ph ph-x text-xl"></i></button>
+        const Footer = () => (
+            <footer className="mt-20 glass-panel border-t border-white/50 relative overflow-hidden">
+                <div className="container mx-auto px-6 py-12">
+                    {/* Sección Misión/Visión/Valores */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                        {[
+                            { t: "Misión", d: "Entregar soluciones prácticas y novedosas, eliminando barreras de envío.", i: "ph-flag-banner" },
+                            { t: "Visión", d: "Ser el referente online en Uruguay por transparencia y rapidez.", i: "ph-eye" },
+                            { t: "Valores", d: "Transparencia, Eficiencia e Ingenio práctico.", i: "ph-diamond" }
+                        ].map((item, idx) => (
+                            <div key={idx} className="bg-white/40 p-6 rounded-3xl hover:bg-white/60 transition-colors border border-white/50">
+                                <div className="w-10 h-10 rounded-xl bg-lime-100 text-lime-600 flex items-center justify-center text-xl mb-3">
+                                    <i className={`ph ${item.i}`}></i>
+                                </div>
+                                <h3 className="font-bold text-lg text-slate-800 mb-1">{item.t}</h3>
+                                <p className="text-sm text-slate-600 leading-relaxed">{item.d}</p>
+                            </div>
+                        ))}
                     </div>
 
-                    <div className="flex-1 overflow-y-auto p-8 space-y-6 no-scrollbar">
+                    <div className="border-t border-slate-200/50 pt-8 text-center">
+                        <h2 className="text-3xl font-black text-slate-800 mb-2">NOMADA<span className="text-lime-600">BOX</span></h2>
+                        <p className="text-slate-500 mb-6">Todo lo que necesitas, en la caja que te sigue.</p>
+                        
+                        <a 
+                            href={INSTAGRAM_URL} 
+                            target="_blank"
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-white rounded-full shadow-sm hover:shadow-md hover:text-pink-600 transition-all text-slate-600 font-bold text-sm"
+                        >
+                            <i className="ph ph-instagram-logo text-xl"></i>
+                            Seguinos en Instagram
+                        </a>
+                        
+                        <p className="text-xs text-slate-400 mt-8">© 2026 NomadaBox. Montevideo, Uruguay.</p>
+                    </div>
+                </div>
+            </footer>
+        );
+
+        // --- COMPONENTES DEL CARRITO Y CHECKOUT (Misma lógica funcional) ---
+        const CartSidebar = ({ isOpen, onClose, cart, updateQty, total, onCheckout }) => (
+            <>
+                <div className={`fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] transition-opacity duration-500 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={onClose} />
+                <div className={`fixed top-0 right-0 h-full w-full max-w-md bg-white/90 backdrop-blur-xl z-[70] shadow-2xl transform transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) ${isOpen ? 'translate-x-0' : 'translate-x-full'} flex flex-col border-l border-white/50`}>
+                    <div className="p-6 flex justify-between items-center bg-white/50">
+                        <h2 className="text-2xl font-black text-slate-800">Tu Caja</h2>
+                        <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition"><i className="ph ph-x text-xl"></i></button>
+                    </div>
+                    <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar">
                         {cart.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full text-slate-400 opacity-60">
-                                <i className="ph ph-cube text-8xl mb-4"></i>
-                                <p className="font-medium">Tu caja nómada está vacía</p>
+                                <i className="ph ph-cube text-6xl mb-3"></i>
+                                <p>Caja vacía</p>
                             </div>
                         ) : (
                             cart.map(item => (
-                                <div key={item.id} className="flex gap-4 items-center">
-                                    <div className="w-20 h-20 bg-white rounded-2xl shadow-sm p-2 border border-slate-100 flex-shrink-0">
-                                        <img src={item.imagen} className="w-full h-full object-contain" />
-                                    </div>
+                                <div key={item.id} className="flex gap-3 items-center bg-white p-2 rounded-2xl shadow-sm border border-slate-50">
+                                    <img src={item.imagen} className="w-16 h-16 rounded-xl object-contain bg-slate-50" />
                                     <div className="flex-1">
-                                        <h4 className="font-bold text-slate-800 leading-tight mb-1">{item.nombre}</h4>
-                                        <p className="text-lime-600 font-bold">$U {(item.precio * item.cantidad).toLocaleString('es-UY')}</p>
+                                        <h4 className="font-bold text-slate-800 text-sm mb-1">{item.nombre}</h4>
+                                        <p className="text-lime-600 font-bold text-sm">$U {(item.precio * item.cantidad).toLocaleString('es-UY')}</p>
                                     </div>
-                                    <div className="flex flex-col items-center gap-1 bg-slate-100 rounded-lg p-1">
-                                        <button onClick={() => updateQty(item.id, 1)} className="w-6 h-6 flex items-center justify-center hover:text-lime-600"><i className="ph ph-plus-circle"></i></button>
+                                    <div className="flex flex-col items-center gap-1 bg-slate-50 rounded-lg p-1">
+                                        <button onClick={() => updateQty(item.id, 1)} className="w-6 h-6 flex items-center justify-center hover:text-lime-600 text-xs"><i className="ph ph-plus"></i></button>
                                         <span className="text-xs font-bold">{item.cantidad}</span>
-                                        <button onClick={() => updateQty(item.id, -1)} className="w-6 h-6 flex items-center justify-center hover:text-red-500"><i className="ph ph-minus-circle"></i></button>
+                                        <button onClick={() => updateQty(item.id, -1)} className="w-6 h-6 flex items-center justify-center hover:text-red-500 text-xs"><i className="ph ph-minus"></i></button>
                                     </div>
                                 </div>
                             ))
                         )}
                     </div>
-
-                    <div className="p-8 bg-white border-t border-slate-100">
-                        <div className="flex justify-between items-end mb-6">
-                            <span className="text-sm text-slate-500 font-medium">Total Final (Envío Inc.)</span>
-                            <span className="text-4xl font-black text-slate-800">$U {total.toLocaleString('es-UY')}</span>
+                    <div className="p-6 bg-white border-t border-slate-100">
+                        <div className="flex justify-between items-end mb-4">
+                            <span className="text-sm text-slate-500">Total (Envío Inc.)</span>
+                            <span className="text-3xl font-black text-slate-800">$U {total.toLocaleString('es-UY')}</span>
                         </div>
-                        <button 
-                            onClick={onCheckout}
-                            disabled={cart.length === 0}
-                            className="w-full py-5 rounded-2xl btn-primary text-white font-bold text-lg shadow-xl shadow-lime-500/30 hover:shadow-lime-500/50 transition-all disabled:opacity-50 disabled:shadow-none flex items-center justify-center gap-3"
-                        >
-                            <span>Procesar Pedido</span>
-                            <i className="ph ph-arrow-right font-bold"></i>
-                        </button>
+                        <button onClick={onCheckout} disabled={cart.length === 0} className="w-full py-4 rounded-xl btn-primary text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed">Procesar Pedido</button>
                     </div>
                 </div>
             </>
@@ -286,69 +351,33 @@
         const CheckoutModal = ({ isOpen, onClose, cart, total }) => {
             if (!isOpen) return null;
             const [data, setData] = useState({ name: '', id: '', address: '', phone: '' });
-
             const sendOrder = (e) => {
                 e.preventDefault();
                 let msg = `🚀 *NUEVO PEDIDO NOMADABOX*\n\n`;
                 cart.forEach(i => msg += `📦 ${i.cantidad}x ${i.nombre}\n`);
-                msg += `\n💰 *TOTAL A PAGAR: $U ${total.toLocaleString('es-UY')}*\n(Envío Incluido)\n\n`;
-                msg += `📍 *Datos de Envío:*\n👤 ${data.name}\n🆔 ${data.id}\n🏠 ${data.address}\n📱 ${data.phone}\n\n📝 Quedo a la espera de la cuenta para transferir.`;
+                msg += `\n💰 *TOTAL: $U ${total.toLocaleString('es-UY')}*\n\n📍 *Datos:*\n👤 ${data.name}\n🆔 ${data.id}\n🏠 ${data.address}\n📱 ${data.phone}`;
                 window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
                 onClose();
             };
-
             return (
                 <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onClick={onClose}></div>
                     <div className="bg-white w-full max-w-lg rounded-[2rem] p-8 relative z-10 shadow-2xl animate-blob">
-                        <div className="flex justify-between items-center mb-8">
-                            <h3 className="text-2xl font-black text-slate-800">Finalizar Compra</h3>
-                            <button onClick={onClose} className="text-slate-400 hover:text-red-500"><i className="ph ph-x-circle text-3xl"></i></button>
-                        </div>
-                        
-                        <form onSubmit={sendOrder} className="space-y-5">
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase text-slate-400 tracking-wider">Tu Nombre</label>
-                                <input required type="text" className="w-full bg-slate-50 border-none rounded-xl p-4 font-semibold focus:ring-2 focus:ring-lime-500 transition-all" placeholder="Juan Pérez" onChange={e => setData({...data, name: e.target.value})} />
-                            </div>
+                        <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-red-500"><i className="ph ph-x-circle text-3xl"></i></button>
+                        <h3 className="text-2xl font-black text-slate-800 mb-6">Finalizar Compra</h3>
+                        <form onSubmit={sendOrder} className="space-y-4">
+                            <input required type="text" className="w-full bg-slate-50 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-lime-500 outline-none" placeholder="Nombre Completo" onChange={e => setData({...data, name: e.target.value})} />
                             <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <label className="text-xs font-bold uppercase text-slate-400 tracking-wider">Cédula</label>
-                                    <input required type="text" className="w-full bg-slate-50 border-none rounded-xl p-4 font-semibold focus:ring-2 focus:ring-lime-500 transition-all" placeholder="1.234.567-8" onChange={e => setData({...data, id: e.target.value})} />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs font-bold uppercase text-slate-400 tracking-wider">Celular</label>
-                                    <input required type="tel" className="w-full bg-slate-50 border-none rounded-xl p-4 font-semibold focus:ring-2 focus:ring-lime-500 transition-all" placeholder="099..." onChange={e => setData({...data, phone: e.target.value})} />
-                                </div>
+                                <input required type="text" className="bg-slate-50 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-lime-500 outline-none" placeholder="C.I." onChange={e => setData({...data, id: e.target.value})} />
+                                <input required type="tel" className="bg-slate-50 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-lime-500 outline-none" placeholder="Celular" onChange={e => setData({...data, phone: e.target.value})} />
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase text-slate-400 tracking-wider">Dirección de Entrega</label>
-                                <textarea required rows="2" className="w-full bg-slate-50 border-none rounded-xl p-4 font-semibold focus:ring-2 focus:ring-lime-500 transition-all" placeholder="Calle, Número, Apto, Ciudad..." onChange={e => setData({...data, address: e.target.value})}></textarea>
-                            </div>
-                            
-                            <button type="submit" className="w-full py-5 rounded-2xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3 transform hover:-translate-y-1">
-                                <i className="ph ph-whatsapp-logo text-2xl"></i>
-                                Confirmar en WhatsApp
-                            </button>
+                            <textarea required rows="2" className="w-full bg-slate-50 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-lime-500 outline-none" placeholder="Dirección completa" onChange={e => setData({...data, address: e.target.value})}></textarea>
+                            <button type="submit" className="w-full py-4 rounded-xl bg-[#25D366] text-white font-bold text-lg hover:bg-[#20bd5a] transition-all flex items-center justify-center gap-2"><i className="ph ph-whatsapp-logo text-xl"></i> Confirmar</button>
                         </form>
                     </div>
                 </div>
             );
         };
-
-        const Footer = () => (
-            <footer className="mt-20 py-10 bg-white/50 backdrop-blur border-t border-white/50 text-center">
-                <div className="container mx-auto px-4">
-                    <h2 className="text-2xl font-black text-slate-800 mb-2">NOMADA<span className="text-lime-600">BOX</span></h2>
-                    <p className="text-slate-500 text-sm mb-6">Montevideo, Uruguay • Envíos a todo el país</p>
-                    <div className="flex justify-center gap-4 text-slate-400">
-                        <i className="ph ph-instagram-logo text-2xl hover:text-lime-600 transition-colors cursor-pointer"></i>
-                        <i className="ph ph-facebook-logo text-2xl hover:text-lime-600 transition-colors cursor-pointer"></i>
-                    </div>
-                    <p className="text-xs text-slate-300 mt-8">© 2026 NomadaBox Inc.</p>
-                </div>
-            </footer>
-        );
 
         // --- APP MAIN ---
         const App = () => {
@@ -356,89 +385,93 @@
             const [cart, setCart] = useState([]);
             const [isCartOpen, setIsCartOpen] = useState(false);
             const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+            const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
             const [loading, setLoading] = useState(true);
+            
+            // Estado para filtros
+            const [selectedCategory, setSelectedCategory] = useState('Todas');
+            const [searchQuery, setSearchQuery] = useState('');
 
             useEffect(() => {
                 Papa.parse(SHEET_URL, {
-                    download: true,
-                    header: true,
+                    download: true, header: true,
                     complete: (results) => {
-                        const cleanData = results.data
-                            .filter(i => i.nombre && i.precio) // Filtrar filas vacías
-                            .map(i => ({...i, id: i.id || Math.random(), precio: Number(i.precio)}));
+                        const cleanData = results.data.filter(i => i.nombre && i.precio).map(i => ({...i, id: i.id || Math.random(), precio: Number(i.precio)}));
                         setProducts(cleanData);
-                        setLoading(false);
-                    },
-                    error: (err) => {
-                        console.error("Error CSV:", err);
                         setLoading(false);
                     }
                 });
-
-                const savedCart = JSON.parse(localStorage.getItem('nomadabox_cart') || '[]');
-                setCart(savedCart);
+                setCart(JSON.parse(localStorage.getItem('nomadabox_cart') || '[]'));
             }, []);
 
-            useEffect(() => {
-                localStorage.setItem('nomadabox_cart', JSON.stringify(cart));
-            }, [cart]);
+            useEffect(() => localStorage.setItem('nomadabox_cart', JSON.stringify(cart)), [cart]);
 
-            const addToCart = (product) => {
+            const addToCart = (p) => {
                 setCart(prev => {
-                    const exists = prev.find(p => p.id === product.id);
-                    if (exists) return prev.map(p => p.id === product.id ? {...p, cantidad: p.cantidad + 1} : p);
-                    return [...prev, {...product, cantidad: 1}];
+                    const exists = prev.find(item => item.id === p.id);
+                    return exists ? prev.map(item => item.id === p.id ? {...item, cantidad: item.cantidad + 1} : item) : [...prev, {...p, cantidad: 1}];
                 });
                 setIsCartOpen(true);
             };
 
-            const updateQty = (id, n) => {
-                setCart(prev => prev.map(p => {
-                    if (p.id === id) return {...p, cantidad: Math.max(0, p.cantidad + n)};
-                    return p;
-                }).filter(p => p.cantidad > 0));
-            };
+            const updateQty = (id, n) => setCart(prev => prev.map(p => p.id === id ? {...p, cantidad: Math.max(0, p.cantidad + n)} : p).filter(p => p.cantidad > 0));
 
-            const total = cart.reduce((acc, el) => acc + (el.precio * el.cantidad), 0);
-            const count = cart.reduce((acc, el) => acc + el.cantidad, 0);
+            // Lógica de Filtrado
+            const categories = useMemo(() => [...new Set(products.map(p => p.categoria))], [products]);
+            
+            const filteredProducts = products.filter(product => {
+                const matchesCategory = selectedCategory === 'Todas' || product.categoria === selectedCategory;
+                const matchesSearch = product.nombre.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      product.descripcion.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
 
             return (
-                <div className="min-h-screen relative font-sans text-slate-800">
+                <div className="min-h-screen relative font-sans text-slate-800 pb-20">
                     <AnimatedBackground />
-                    <Navbar cartCount={count} onOpenCart={() => setIsCartOpen(true)} />
+                    
+                    <Navbar 
+                        cartCount={cart.reduce((acc, el) => acc + el.cantidad, 0)} 
+                        onOpenCart={() => setIsCartOpen(true)}
+                        onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+                        categories={categories}
+                        selectedCategory={selectedCategory}
+                        onSelectCategory={setSelectedCategory}
+                        searchQuery={searchQuery}
+                        onSearch={setSearchQuery}
+                    />
+
+                    <MobileMenu 
+                        isOpen={isMobileMenuOpen}
+                        onClose={() => setIsMobileMenuOpen(false)}
+                        categories={categories}
+                        selectedCategory={selectedCategory}
+                        onSelectCategory={setSelectedCategory}
+                        searchQuery={searchQuery}
+                        onSearch={setSearchQuery}
+                    />
+                    
                     <Hero />
                     
-                    <main className="container mx-auto px-4 relative z-10">
+                    <main className="container mx-auto px-4 relative z-10 min-h-[400px]">
                         {loading ? (
-                            <div className="flex justify-center py-20">
-                                <div className="w-16 h-16 border-4 border-lime-200 border-t-lime-500 rounded-full animate-spin"></div>
+                            <div className="flex justify-center py-20"><div className="w-16 h-16 border-4 border-lime-200 border-t-lime-500 rounded-full animate-spin"></div></div>
+                        ) : filteredProducts.length === 0 ? (
+                            <div className="text-center py-20 opacity-60">
+                                <i className="ph ph-magnifying-glass text-6xl mb-4"></i>
+                                <p className="text-xl">No encontramos productos con esa búsqueda.</p>
+                                <button onClick={() => {setSearchQuery(''); setSelectedCategory('Todas')}} className="mt-4 text-lime-600 font-bold underline">Ver todos</button>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                                {products.map(p => (
-                                    <ProductCard key={p.id} product={p} onAdd={addToCart} />
-                                ))}
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+                                {filteredProducts.map(p => <ProductCard key={p.id} product={p} onAdd={addToCart} />)}
                             </div>
                         )}
                     </main>
 
                     <Footer />
-                    
-                    <CartSidebar 
-                        isOpen={isCartOpen} 
-                        onClose={() => setIsCartOpen(false)} 
-                        cart={cart} 
-                        updateQty={updateQty} 
-                        total={total}
-                        onCheckout={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }}
-                    />
-                    
-                    <CheckoutModal 
-                        isOpen={isCheckoutOpen} 
-                        onClose={() => setIsCheckoutOpen(false)} 
-                        cart={cart} 
-                        total={total} 
-                    />
+                    <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} cart={cart} updateQty={updateQty} total={cart.reduce((acc, el) => acc + (el.precio * el.cantidad), 0)} onCheckout={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }} />
+                    <CheckoutModal isOpen={isCheckoutOpen} onClose={() => setIsCheckoutOpen(false)} cart={cart} total={cart.reduce((acc, el) => acc + (el.precio * el.cantidad), 0)} />
                 </div>
             );
         };
