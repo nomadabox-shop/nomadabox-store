@@ -1,71 +1,18 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cámara Mágica NomadaPrint | Regalo Sin Pantallas 🎁</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2384cc16%22/><text y=%22.9em%22 font-size=%2290%22 x=%2250%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22 font-weight=%22bold%22>N</text></svg>">
-    
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
-                    colors: {
-                        lime: { 400: '#a3e635', 500: '#84cc16', 600: '#65a30d' },
-                        // Usamos un color secundario, por ejemplo, rosa o morado suave, para el toque 'gatito'
-                        pinkish: { 500: '#f472b6', 600: '#db2777' }, 
-                    },
-                    animation: {
-                        'blob': 'blob 7s infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-sm': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        blob: { /* Mantener tu animación */ },
-                        float: { /* Mantener tu animación */ },
-                        pulse: { /* Mantener tu animación de Tailwind */ }, 
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { background-color: #f0f2f5; overflow-x: hidden; }
-        .glass-panel { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07); }
-        .btn-primary { background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%); box-shadow: 0 4px 15px rgba(132, 204, 22, 0.4); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        /* Añadimos una animación más suave para el botón principal */
-        .btn-hero:hover { transform: scale(1.03); box-shadow: 0 10px 30px rgba(132, 204, 22, 0.6); }
-    </style>
-</head>
-<body class="antialiased text-slate-800">
-    <div id="root"></div>
-
-    <script type="text/babel">
+<script type="text/babel">
         const { useState, useEffect, useMemo } = React;
 
-        const WHATSAPP = "59895736428"; // Tu número de WhatsApp
+        const WHATSAPP = "59895736428"; 
         const INSTAGRAM_URL = "https://www.instagram.com/nomadabox_shop/";
 
-        // --- DATOS DEL PRODUCTO (HARDCODEADO) ---
+        // --- DATOS DEL PRODUCTO ---
         const PRODUCT_DATA = {
             id: 'CATCAM001',
             nombre: 'Cámara Mágica NomadaPrint (Edición Gatito)',
-            precio: 3490, // $U 3.490
-            imagen: 'URL_DE_LA_MEJOR_FOTO_DE_LA_CAMARA_GATITO', // **IMPORTANTE: Carga una imagen excelente (ej. fondo blanco limpio o un niño usándola)**
-            descripcion: 'Cámara de impresión térmica instantánea para niños, fomenta la creatividad sin usar pantallas. ¡Imprime y colorea al instante!',
-            categoria: 'Regalo Inteligente', // Único producto, pero mantenemos la estructura.
+            precio: 3490, 
+            // Asegúrate de que este archivo esté en tu GitHub
+            imagen: './camara-principal.jpg', 
+            descripcion: '¡La cámara que imprime sin tinta! Saca fotos, edítalas en la App y crea stickers al instante. El regalo creativo definitivo.',
+            categoria: 'Regalo Inteligente',
         };
 
         const AnimatedBackground = () => (
@@ -76,25 +23,20 @@
             </div>
         );
 
-        // --- NAVBAR (Simplificada) ---
+        // --- NAVBAR ---
         const Navbar = ({ cartCount, onOpenCart }) => (
             <nav className="fixed top-0 w-full z-50 transition-all duration-300">
                 <div className="glass-panel mx-2 md:mx-4 mt-2 md:mt-4 rounded-2xl px-4 md:px-6 py-3 md:py-4 flex justify-between items-center shadow-lg relative">
-                    
-                    {/* IZQUIERDA: Logo */}
                     <div className="flex items-center gap-3 md:gap-6">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-lime-500 to-lime-400 flex items-center justify-center text-white font-black text-xl shadow-lime-500/50 shadow-lg">
                             N
                         </div>
                         <span className="hidden md:block font-black text-xl tracking-tighter">NOMADA<span className="text-lime-600">BOX</span></span>
                     </div>
-
-                    {/* DERECHA: Carrito (El único botón importante) */}
                     <div className="flex items-center gap-3">
                         <span className="hidden lg:block text-[10px] font-bold bg-white/50 px-3 py-1.5 rounded-full border border-white/60 text-slate-500 uppercase tracking-wide">
                             🚚 Envío Incluido
                         </span>
-
                         <button 
                             onClick={onOpenCart} 
                             className="relative w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white border border-white flex items-center justify-center shadow-sm hover:shadow-md transition-all group"
@@ -111,133 +53,155 @@
             </nav>
         );
 
-        // --- HERO SECTION (El centro de atención) ---
+        // --- HERO SECTION ---
         const Hero = ({ product, onAdd }) => (
-            <header className="pt-28 pb-16 px-4 container mx-auto text-center relative md:pt-40 md:pb-24">
-                
+            <header className="pt-28 pb-8 px-4 container mx-auto text-center relative md:pt-40 md:pb-12">
                 <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-pinkish-100 text-pinkish-600 font-bold mb-6 animate-float">
                     <i className="ph ph-sparkle text-lg"></i>
                     <span className="text-sm uppercase tracking-wider">¡El Regalo del Año!</span>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center text-left max-w-5xl mx-auto">
-                    {/* IZQUIERDA: Imagen y Precio */}
-                    <div className="relative flex flex-col items-center md:items-start">
-                        <div className="w-full max-w-sm rounded-[3rem] overflow-hidden bg-white/70 shadow-2xl glass-panel p-6 mb-6">
-                            {/* **IMPORTANTE: Sustituye esta URL por tu imagen real** */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center text-left max-w-6xl mx-auto">
+                    {/* IZQUIERDA: Imagen */}
+                    <div className="relative flex flex-col items-center justify-center">
+                        <div className="w-full max-w-md rounded-[2.5rem] overflow-hidden bg-white shadow-2xl border-4 border-white/50 p-4 mb-6 relative z-10">
+                            {/* IMAGEN PRINCIPAL */}
                             <img 
-                                src={product.imagen || 'https://images-na.ssl-images-amazon.com/images/I/71R2o5j-PXL._AC_SL1500_.jpg'} 
+                                src={product.imagen} 
+                                onError={(e) => {e.target.onerror = null; e.target.src="https://images-na.ssl-images-amazon.com/images/I/71R2o5j-PXL._AC_SL1500_.jpg"}} // Fallback si no subes la foto
                                 alt={product.nombre} 
                                 className="w-full object-contain hover:scale-105 transition-transform duration-700 ease-in-out"
                             />
                         </div>
-                        
-                        <div className="flex flex-col items-center md:items-start">
-                            <h1 className="text-4xl md:text-5xl font-black mb-2 tracking-tight leading-none text-slate-800">
-                                {product.nombre}
+                        {/* Decoración detrás */}
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-lime-200/40 to-pinkish-200/40 rounded-full blur-3xl -z-0"></div>
+                    </div>
+                    
+                    {/* DERECHA: Datos */}
+                    <div className="flex flex-col items-center md:items-start space-y-6">
+                        <div>
+                            <h1 className="text-4xl md:text-6xl font-black mb-4 tracking-tight leading-none text-slate-800">
+                                Captura, Imprime <br/><span className="text-lime-600">y Colorea.</span>
                             </h1>
-                            <p className="text-xl text-slate-600 font-light mb-4 max-w-md">{product.descripcion}</p>
-                            
-                            <div className="flex items-center justify-between w-full max-w-sm gap-4">
-                                <div>
-                                    <span className="text-sm font-bold text-lime-600 uppercase tracking-wider block">Precio Único (Envío Inc.)</span>
-                                    <span className="text-5xl font-black text-slate-800">$U {product.precio.toLocaleString('es-UY')}</span>
-                                </div>
-                                
-                                <button 
-                                    onClick={() => onAdd(product)}
-                                    className="btn-primary text-white font-black text-xl px-8 py-4 rounded-2xl transition-all btn-hero hover:scale-105 active:scale-95 whitespace-nowrap"
-                                >
-                                    <i className="ph ph-sparkle text-2xl mr-1"></i> Comprar Ahora
-                                </button>
+                            <p className="text-lg md:text-xl text-slate-600 font-light max-w-lg leading-relaxed">
+                                {product.descripcion}
+                            </p>
+                        </div>
+                        
+                        <div className="bg-white/60 p-4 rounded-2xl w-full max-w-sm border border-white/60">
+                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Precio Oferta</span>
+                            <div className="flex items-end gap-2">
+                                <span className="text-5xl font-black text-slate-800">$U {product.precio.toLocaleString('es-UY')}</span>
+                                <span className="text-sm text-lime-600 font-bold mb-2">Envío Gratis</span>
                             </div>
                         </div>
-                    </div>
 
-                    {/* DERECHA: Argumentos de Venta Rápidos */}
-                    <div className="space-y-4 pt-10 md:pt-0">
-                        <FeatureBlock 
-                            icon="ph-palette" 
-                            title="¡Imprime y Colorea!" 
-                            description="La magia de la impresión térmica en B/N permite a los niños colorear sus fotos y desarrollar su creatividad." 
-                        />
-                        <FeatureBlock 
-                            icon="ph-thermometer-simple" 
-                            title="Cero Cartuchos. Cero Tinta." 
-                            description="Tecnología de impresión térmica. Solo usas papel, ahorrando cientos de pesos en costosos cartuchos de tinta." 
-                        />
-                        <FeatureBlock 
-                            icon="ph-shield-check" 
-                            title="Anti-Pantallas y Anti-Golpes" 
-                            description="Diseñada para resistir. Es el gadget perfecto para fomentar la actividad y alejar a los niños del celular." 
-                        />
-                        <FeatureBlock 
-                            icon="ph-truck" 
-                            title="Entrega Rápida en todo Uruguay" 
-                            description="Recibe tu NomadaPrint en 48hs en Montevideo y 72hs al interior. ¡Garantía de satisfacción NomadaBox!" 
-                        />
+                        <button 
+                            onClick={() => onAdd(product)}
+                            className="w-full max-w-sm btn-primary text-white font-black text-xl px-8 py-5 rounded-2xl transition-all btn-hero hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-3"
+                        >
+                            <i className="ph ph-shopping-cart text-2xl"></i> Agregar al Carrito
+                        </button>
+
+                        <div className="grid grid-cols-2 gap-3 w-full max-w-sm">
+                            <div className="flex items-center gap-2 text-sm text-slate-600 font-bold"><i className="ph ph-check-circle text-lime-600 text-lg"></i> Sin Tinta</div>
+                            <div className="flex items-center gap-2 text-sm text-slate-600 font-bold"><i className="ph ph-check-circle text-lime-600 text-lg"></i> App Incluida</div>
+                            <div className="flex items-center gap-2 text-sm text-slate-600 font-bold"><i className="ph ph-check-circle text-lime-600 text-lg"></i> Papel Térmico</div>
+                            <div className="flex items-center gap-2 text-sm text-slate-600 font-bold"><i className="ph ph-check-circle text-lime-600 text-lg"></i> Juegos</div>
+                        </div>
                     </div>
                 </div>
             </header>
         );
-        
-        // Componente Auxiliar para las Features
-        const FeatureBlock = ({ icon, title, description }) => (
-            <div className="p-4 glass-panel rounded-2xl flex items-start gap-4 hover:shadow-lg transition-shadow">
-                <div className="w-12 h-12 rounded-xl bg-lime-100 text-lime-600 flex items-center justify-center text-2xl flex-shrink-0">
-                    <i className={`ph ${icon}`}></i>
+
+        // --- NUEVO: SECCIÓN DE VIDEO ---
+        const VideoSection = () => (
+            <section className="py-12 px-4 container mx-auto">
+                <div className="max-w-4xl mx-auto bg-white rounded-[2rem] p-4 md:p-8 shadow-xl border border-slate-100">
+                    <div className="text-center mb-8">
+                        <h2 className="text-3xl font-black text-slate-800 mb-2">Mira la Magia en Acción ✨</h2>
+                        <p className="text-slate-500">Conecta la App "Fun Print", elige tu foto e imprime en segundos.</p>
+                    </div>
+                    <div className="relative rounded-2xl overflow-hidden aspect-video bg-slate-100 shadow-inner group">
+                        {/* Asegúrate de subir video-promo.mp4 a tu github */}
+                        <video controls className="w-full h-full object-cover">
+                            <source src="./video-promo.mp4" type="video/mp4" />
+                            Tu navegador no soporta videos.
+                        </video>
+                    </div>
                 </div>
-                <div>
-                    <h3 className="font-bold text-lg text-slate-800 mb-1 leading-tight">{title}</h3>
-                    <p className="text-sm text-slate-600">{description}</p>
-                </div>
-            </div>
+            </section>
         );
 
+        // --- NUEVO: GALERÍA DE IMÁGENES ---
+        const GallerySection = () => (
+            <section className="py-16 px-4 container mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+                    {/* Tarjeta 1: Papel Largo */}
+                    <div className="bg-white p-6 rounded-[2rem] shadow-lg border border-slate-100 flex flex-col md:flex-row items-center gap-6">
+                        <img src="./camara-papel.jpg" alt="Imprimiendo dibujos" className="w-32 h-32 md:w-48 md:h-48 object-cover rounded-2xl shadow-md rotate-3 hover:rotate-0 transition-all" />
+                        <div>
+                            <h3 className="text-xl font-bold text-slate-800 mb-2">¡No solo fotos!</h3>
+                            <p className="text-slate-600 text-sm leading-relaxed">
+                                Imprime dibujos de animales, notas o listas. El papel es económico y fácil de conseguir. ¡Diversión interminable coloreando!
+                            </p>
+                        </div>
+                    </div>
+                     {/* Tarjeta 2: Cámara Abierta */}
+                     <div className="bg-white p-6 rounded-[2rem] shadow-lg border border-slate-100 flex flex-col md:flex-row items-center gap-6">
+                        <img src="./camara-abierta.jpg" alt="Tecnología Térmica" className="w-32 h-32 md:w-48 md:h-48 object-cover rounded-2xl shadow-md -rotate-3 hover:rotate-0 transition-all" />
+                        <div>
+                            <h3 className="text-xl font-bold text-slate-800 mb-2">Cero Tinta = Cero Lío</h3>
+                            <p className="text-slate-600 text-sm leading-relaxed">
+                                Olvídate de mancharte las manos o comprar cartuchos caros. Usa tecnología térmica segura para los niños. Recarga el papel y listo.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
 
-        // --- SECCIÓN DE ARGUMENTOS VISUALES (Sección Adicional) ---
         const BenefitsSection = () => (
             <section className="container mx-auto px-4 py-16">
-                <h2 className="text-3xl md:text-4xl font-black text-center mb-12">Por qué la NomadaPrint es el Mejor Regalo 🎁</h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <h2 className="text-3xl md:text-4xl font-black text-center mb-12 text-slate-800">¿Por qué todos aman la NomadaPrint? 🎁</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center max-w-6xl mx-auto">
                     <BenefitCard 
                         icon="ph-film-strip" 
                         title="Instantáneo" 
-                        text="¡Saca la foto y la tiene en la mano al instante! La gratificación inmediata mantiene la atención de los más pequeños." 
+                        text="¡Saca la foto y la tiene en la mano al instante! La gratificación inmediata mantiene la atención." 
                     />
                     <BenefitCard 
                         icon="ph-paint-brush-broad" 
                         title="Creatividad Ilimitada" 
-                        text="Cada foto impresa en B/N es un lienzo. Fomenta el arte y la motricidad fina pintando sus propias creaciones." 
+                        text="Cada foto impresa en B/N es un lienzo. Fomenta el arte coloreando sus propias creaciones." 
                     />
                     <BenefitCard 
-                        icon="ph-note-pencil" 
-                        title="Recuerdos Únicos" 
-                        text="No son fotos que se pierden en el celular. Son stickers y notas que pueden pegar en cuadernos y en su cuarto." 
+                        icon="ph-device-mobile-camera" 
+                        title="Conecta tu Celular" 
+                        text="Usa la App 'Fun Print' para imprimir fotos de tu galería, notas adhesivas o etiquetas para el cole." 
                     />
                 </div>
             </section>
         );
 
         const BenefitCard = ({ icon, title, text }) => (
-            <div className="p-6 bg-white rounded-3xl shadow-xl border border-slate-100 hover:border-lime-300 transition-all transform hover:-translate-y-1">
-                <i className={`ph ${icon} text-5xl text-lime-600 mb-4 inline-block`}></i>
-                <h3 className="font-extrabold text-xl mb-3">{title}</h3>
-                <p className="text-slate-600">{text}</p>
+            <div className="p-8 bg-white/80 backdrop-blur-sm rounded-[2rem] shadow-xl border border-white hover:border-lime-400 transition-all transform hover:-translate-y-2 group">
+                <div className="w-20 h-20 mx-auto bg-lime-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-lime-500 transition-colors">
+                    <i className={`ph ${icon} text-4xl text-lime-600 group-hover:text-white transition-colors`}></i>
+                </div>
+                <h3 className="font-black text-xl mb-3 text-slate-800">{title}</h3>
+                <p className="text-slate-600 font-medium leading-relaxed">{text}</p>
             </div>
         );
 
-
         const Footer = () => (
-            <footer className="mt-20 glass-panel border-t border-white/50 relative overflow-hidden">
+            <footer className="mt-10 glass-panel border-t border-white/50 relative overflow-hidden">
                 <div className="container mx-auto px-6 py-12">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                        {/* Simplificamos el Footer y lo orientamos a la confianza */}
                         {[
                             { t: "Garantía", d: "100% Satisfacción o te devolvemos el dinero.", i: "ph-star" },
-                            { t: "Contacto Directo", d: "Respuesta inmediata por WhatsApp para tus dudas o pedidos.", i: "ph-whatsapp-logo" },
-                            { t: "Pago Seguro", d: "Aceptamos todas las tarjetas y métodos de pago de Uruguay (MercadoPago/Transferencia).", i: "ph-credit-card" }
+                            { t: "Contacto Directo", d: "Respuesta inmediata por WhatsApp.", i: "ph-whatsapp-logo" },
+                            { t: "Pago Seguro", d: "Aceptamos todas las tarjetas y métodos de pago.", i: "ph-credit-card" }
                         ].map((item, idx) => (
                             <div key={idx} className="bg-white/40 p-6 rounded-3xl hover:bg-white/60 transition-colors border border-white/50">
                                 <div className="w-10 h-10 rounded-xl bg-lime-100 text-lime-600 flex items-center justify-center text-xl mb-3">
@@ -248,16 +212,10 @@
                             </div>
                         ))}
                     </div>
-
                     <div className="border-t border-slate-200/50 pt-8 text-center">
                         <h2 className="text-3xl font-black text-slate-800 mb-2">NOMADA<span className="text-lime-600">BOX</span></h2>
-                        <a 
-                            href={INSTAGRAM_URL} 
-                            target="_blank"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-white rounded-full shadow-sm hover:shadow-md hover:text-pinkish-600 transition-all text-slate-600 font-bold text-sm mt-4"
-                        >
-                            <i className="ph ph-instagram-logo text-xl"></i>
-                            Seguinos en Instagram
+                        <a href={INSTAGRAM_URL} target="_blank" className="inline-flex items-center gap-2 px-6 py-3 bg-white rounded-full shadow-sm hover:shadow-md hover:text-pinkish-600 transition-all text-slate-600 font-bold text-sm mt-4">
+                            <i className="ph ph-instagram-logo text-xl"></i> Seguinos en Instagram
                         </a>
                         <p className="text-xs text-slate-400 mt-8">© 2026 NomadaBox. Montevideo, Uruguay.</p>
                     </div>
@@ -265,34 +223,33 @@
             </footer>
         );
 
-        // --- CARRITO Y CHECKOUT (Mismas funciones, adaptadas para un solo producto) ---
+        // --- CARRITO Y CHECKOUT ---
         const CartSidebar = ({ isOpen, onClose, cart, updateQty, total, onCheckout }) => (
             <>
-                {/* ... (el código de CartSidebar es el mismo, pero solo mostrará la cámara) ... */}
                 <div className={`fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] transition-opacity duration-500 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={onClose} />
-                <div className={`fixed top-0 right-0 h-full w-full max-w-md bg-white/90 backdrop-blur-xl z-[70] shadow-2xl transform transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) ${isOpen ? 'translate-x-0' : 'translate-x-full'} flex flex-col border-l border-white/50`}>
-                    <div className="p-6 flex justify-between items-center bg-white/50">
+                <div className={`fixed top-0 right-0 h-full w-full max-w-md bg-white/95 backdrop-blur-xl z-[70] shadow-2xl transform transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) ${isOpen ? 'translate-x-0' : 'translate-x-full'} flex flex-col border-l border-white/50`}>
+                    <div className="p-6 flex justify-between items-center bg-white/50 border-b border-slate-100">
                         <h2 className="text-2xl font-black text-slate-800">Tu Pedido</h2>
                         <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition"><i className="ph ph-x text-xl"></i></button>
                     </div>
                     <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar">
                         {cart.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full text-slate-400 opacity-60">
-                                <i className="ph ph-sparkle text-6xl mb-3"></i>
-                                <p>Aún no has añadido la Cámara Mágica.</p>
+                                <i className="ph ph-shopping-bag text-6xl mb-3 text-slate-300"></i>
+                                <p className="font-medium">Tu carrito está vacío.</p>
                             </div>
                         ) : (
                             cart.map(item => (
-                                <div key={item.id} className="flex gap-3 items-center bg-white p-2 rounded-2xl shadow-sm border border-slate-50">
-                                    <img src={item.imagen || 'https://images-na.ssl-images-amazon.com/images/I/71R2o5j-PXL._AC_SL1500_.jpg'} className="w-16 h-16 rounded-xl object-contain bg-slate-50" />
+                                <div key={item.id} className="flex gap-3 items-center bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
+                                    <img src={item.imagen} className="w-16 h-16 rounded-xl object-contain bg-slate-50" />
                                     <div className="flex-1">
                                         <h4 className="font-bold text-slate-800 text-sm mb-1">{item.nombre}</h4>
                                         <p className="text-lime-600 font-bold text-sm">$U {(item.precio * item.cantidad).toLocaleString('es-UY')}</p>
                                     </div>
                                     <div className="flex flex-col items-center gap-1 bg-slate-50 rounded-lg p-1">
-                                        <button onClick={() => updateQty(item.id, 1)} className="w-6 h-6 flex items-center justify-center hover:text-lime-600 text-xs"><i className="ph ph-plus"></i></button>
+                                        <button onClick={() => updateQty(item.id, 1)} className="w-6 h-6 flex items-center justify-center hover:text-lime-600 text-xs bg-white shadow-sm rounded-md"><i className="ph ph-plus"></i></button>
                                         <span className="text-xs font-bold">{item.cantidad}</span>
-                                        <button onClick={() => updateQty(item.id, -1)} className="w-6 h-6 flex items-center justify-center hover:text-red-500 text-xs"><i className="ph ph-minus"></i></button>
+                                        <button onClick={() => updateQty(item.id, -1)} className="w-6 h-6 flex items-center justify-center hover:text-red-500 text-xs bg-white shadow-sm rounded-md"><i className="ph ph-minus"></i></button>
                                     </div>
                                 </div>
                             ))
@@ -300,10 +257,12 @@
                     </div>
                     <div className="p-6 bg-white border-t border-slate-100">
                         <div className="flex justify-between items-end mb-4">
-                            <span className="text-sm text-slate-500">Total (Envío Inc.)</span>
+                            <span className="text-sm text-slate-500 font-medium">Total</span>
                             <span className="text-3xl font-black text-slate-800">$U {total.toLocaleString('es-UY')}</span>
                         </div>
-                        <button onClick={onCheckout} disabled={cart.length === 0} className="w-full py-4 rounded-xl btn-primary text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed">Procesar Pedido</button>
+                        <button onClick={onCheckout} disabled={cart.length === 0} className="w-full py-4 rounded-xl btn-primary text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2">
+                            <span>Procesar Pedido</span> <i className="ph ph-arrow-right font-bold"></i>
+                        </button>
                     </div>
                 </div>
             </>
@@ -314,35 +273,36 @@
             const [data, setData] = useState({ name: '', id: '', address: '', phone: '' });
             const sendOrder = (e) => {
                 e.preventDefault();
-                let msg = `🚀 *NUEVO PEDIDO NOMADABOX - CÁMARA GATITO*\n\n`;
+                let msg = `🚀 *PEDIDO WEB - NOMADABOX*\n---------------------------\n`;
                 cart.forEach(i => msg += `📦 ${i.cantidad}x ${i.nombre}\n`);
-                msg += `\n💰 *TOTAL: $U ${total.toLocaleString('es-UY')}*\n\n📍 *Datos:*\n👤 ${data.name}\n🆔 ${data.id}\n🏠 ${data.address}\n📱 ${data.phone}`;
+                msg += `\n💰 *TOTAL: $U ${total.toLocaleString('es-UY')}*\n\n📍 *Datos de Envío:*\n👤 ${data.name}\n🆔 ${data.id}\n🏠 ${data.address}\n📱 ${data.phone}`;
                 window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
-                // Puedes añadir un temporizador para limpiar el carrito después de enviar el pedido.
                 onClose();
             };
             return (
                 <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
-                    {/* ... (el código de CheckoutModal es el mismo) ... */}
                     <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onClick={onClose}></div>
                     <div className="bg-white w-full max-w-lg rounded-[2rem] p-8 relative z-10 shadow-2xl animate-blob">
                         <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-red-500"><i className="ph ph-x-circle text-3xl"></i></button>
-                        <h3 className="text-2xl font-black text-slate-800 mb-6">Confirma tu Compra por WhatsApp</h3>
+                        <h3 className="text-2xl font-black text-slate-800 mb-6 text-center">¡Casi listo! 🚀</h3>
+                        <p className="text-center text-slate-500 text-sm mb-6">Completa tus datos para enviarnos el pedido por WhatsApp.</p>
                         <form onSubmit={sendOrder} className="space-y-4">
-                            <input required type="text" className="w-full bg-slate-50 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-lime-500 outline-none" placeholder="Nombre Completo" onChange={e => setData({...data, name: e.target.value})} />
+                            <input required type="text" className="w-full bg-slate-50 rounded-xl p-4 font-semibold focus:ring-2 focus:ring-lime-500 outline-none transition-all" placeholder="Nombre Completo" onChange={e => setData({...data, name: e.target.value})} />
                             <div className="grid grid-cols-2 gap-4">
-                                <input required type="text" className="bg-slate-50 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-lime-500 outline-none" placeholder="C.I." onChange={e => setData({...data, id: e.target.value})} />
-                                <input required type="tel" className="bg-slate-50 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-lime-500 outline-none" placeholder="Celular" onChange={e => setData({...data, phone: e.target.value})} />
+                                <input required type="text" className="bg-slate-50 rounded-xl p-4 font-semibold focus:ring-2 focus:ring-lime-500 outline-none transition-all" placeholder="C.I." onChange={e => setData({...data, id: e.target.value})} />
+                                <input required type="tel" className="bg-slate-50 rounded-xl p-4 font-semibold focus:ring-2 focus:ring-lime-500 outline-none transition-all" placeholder="Celular" onChange={e => setData({...data, phone: e.target.value})} />
                             </div>
-                            <textarea required rows="2" className="w-full bg-slate-50 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-lime-500 outline-none" placeholder="Dirección completa (Calle, Nº, Ciudad/Barrio)" onChange={e => setData({...data, address: e.target.value})}></textarea>
-                            <button type="submit" className="w-full py-4 rounded-xl bg-[#25D366] text-white font-bold text-lg hover:bg-[#20bd5a] transition-all flex items-center justify-center gap-2"><i className="ph ph-whatsapp-logo text-xl"></i> ¡Finalizar y Enviar a WhatsApp!</button>
+                            <textarea required rows="2" className="w-full bg-slate-50 rounded-xl p-4 font-semibold focus:ring-2 focus:ring-lime-500 outline-none transition-all" placeholder="Dirección completa (Calle, Nº, Ciudad/Barrio)" onChange={e => setData({...data, address: e.target.value})}></textarea>
+                            <button type="submit" className="w-full py-4 rounded-xl bg-[#25D366] text-white font-bold text-lg hover:bg-[#20bd5a] transition-all flex items-center justify-center gap-2 shadow-lg shadow-green-200">
+                                <i className="ph ph-whatsapp-logo text-2xl"></i> Finalizar en WhatsApp
+                            </button>
                         </form>
                     </div>
                 </div>
             );
         };
 
-        // --- APP MAIN (Simplificado) ---
+        // --- APP PRINCIPAL ---
         const App = () => {
             const [cart, setCart] = useState([]);
             const [isCartOpen, setIsCartOpen] = useState(false);
@@ -351,54 +311,34 @@
             useEffect(() => setCart(JSON.parse(localStorage.getItem('nomadabox_cart') || '[]')), []);
             useEffect(() => localStorage.setItem('nomadabox_cart', JSON.stringify(cart)), [cart]);
 
-            // Función de Añadir al carrito simplificada, siempre añade el mismo producto
             const addToCart = (p) => {
                 setCart(prev => {
-                    // Usamos el ID del producto codificado
                     const exists = prev.find(item => item.id === p.id);
-                    const newCart = exists 
+                    return exists 
                         ? prev.map(item => item.id === p.id ? {...item, cantidad: item.cantidad + 1} : item) 
                         : [...prev, {...p, cantidad: 1}];
-                    return newCart;
                 });
-                setIsCartOpen(true); // Abre el carrito inmediatamente al añadir
+                setIsCartOpen(true);
             };
 
             const updateQty = (id, n) => setCart(prev => prev.map(p => p.id === id ? {...p, cantidad: Math.max(0, p.cantidad + n)} : p).filter(p => p.cantidad > 0));
-
             const totalCart = cart.reduce((acc, el) => acc + (el.precio * el.cantidad), 0);
 
             return (
                 <div className="min-h-screen relative font-sans text-slate-800 pb-20">
                     <AnimatedBackground />
-                    
-                    {/* El Navbar ya no necesita lógica de categorías */}
                     <Navbar cartCount={cart.reduce((acc, el) => acc + el.cantidad, 0)} onOpenCart={() => setIsCartOpen(true)} />
-
-                    {/* El Hero ahora es la página de producto */}
-                    <Hero product={PRODUCT_DATA} onAdd={addToCart} />
                     
-                    {/* Sección de Beneficios Adicional */}
+                    {/* AQUÍ ESTÁ EL ORDEN NUEVO DE SECCIONES */}
+                    <Hero product={PRODUCT_DATA} onAdd={addToCart} />
+                    <VideoSection />
+                    <GallerySection />
                     <BenefitsSection />
-
-                    {/* Eliminamos el <main> con el grid de productos y la lógica de carga/filtrado */}
-                    {/* El resto de la página es el Footer y los modales */}
                     
                     <Footer />
-                    <CartSidebar 
-                        isOpen={isCartOpen} 
-                        onClose={() => setIsCartOpen(false)} 
-                        cart={cart} 
-                        updateQty={updateQty} 
-                        total={totalCart} 
-                        onCheckout={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }} 
-                    />
-                    <CheckoutModal 
-                        isOpen={isCheckoutOpen} 
-                        onClose={() => setIsCheckoutOpen(false)} 
-                        cart={cart} 
-                        total={totalCart} 
-                    />
+                    
+                    <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} cart={cart} updateQty={updateQty} total={totalCart} onCheckout={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }} />
+                    <CheckoutModal isOpen={isCheckoutOpen} onClose={() => setIsCheckoutOpen(false)} cart={cart} total={totalCart} />
                 </div>
             );
         };
@@ -406,5 +346,3 @@
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
-</body>
-</html>
