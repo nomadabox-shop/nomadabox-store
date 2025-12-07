@@ -3,72 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cámara Mágica NomadaPrint - ¡Impresión Sin Tinta!</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/css/icons.css">
+    <title>NomadaBox - Cámara Mágica</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        lime: { 400: '#a3e635', 500: '#84cc16', 600: '#65a30d' },
+                        pinkish: { 100: '#fce7f3', 200: '#fbcfe8', 500: '#ec4899', 600: '#db2777' },
+                    },
+                    animation: {
+                        blob: "blob 7s infinite",
+                        float: "float 6s ease-in-out infinite"
+                    },
+                    keyframes: {
+                        blob: {
+                            "0%": { transform: "translate(0px, 0px) scale(1)" },
+                            "33%": { transform: "translate(30px, -50px) scale(1.1)" },
+                            "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
+                            "100%": { transform: "translate(0px, 0px) scale(1)" }
+                        },
+                        float: {
+                            "0%, 100%": { transform: "translateY(0)" },
+                            "50%": { transform: "translateY(-20px)" }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        /* Estilos personalizados y Animaciones */
         .glass-panel {
-            background-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
-        .btn-primary {
-            background-image: linear-gradient(135deg, #a3e635, #65a30d);
-            border: 2px solid #a3e635;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
-        .btn-primary:hover {
-            box-shadow: 0 10px 20px -5px rgba(101, 163, 13, 0.4);
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
-        .btn-hero {
-            background-image: linear-gradient(135deg, #65a30d, #a3e635);
-        }
-        .pinkish-500 { color: #ec4899; }
-        .pinkish-600 { color: #db2777; }
-        .pinkish-100 { background-color: #fce7f3; }
-        .pinkish-200 { background-color: #fbcfe8; }
-
-        @keyframes blob {
-            0% { transform: translate(0px, 0px) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-            100% { transform: translate(0px, 0px) scale(1); }
-        }
-        .animate-blob { animation: blob 7s infinite cubic-bezier(0.6, -0.28, 0.735, 0.045); }
-        .animation-delay-2000 { animation-delay: 2s; }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0px); }
-        }
-        .animate-float { animation: float 3s ease-in-out infinite; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
+
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-900">
+
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect, useMemo } = React;
 
-        const WHATSAPP = "59895736428";
+        const WHATSAPP = "59895736428"; 
         const INSTAGRAM_URL = "https://www.instagram.com/nomadabox_shop/";
-        // URL del video de respaldo si no se sube el archivo local
-        const FALLBACK_VIDEO_URL = "https://www.youtube.com/embed/2d2Nn8J8Y8M?si=b-uV45K32G9t4LwR&amp;controls=0"; 
-        
+
         // --- DATOS DEL PRODUCTO ---
         const PRODUCT_DATA = {
             id: 'CATCAM001',
             nombre: 'Cámara Mágica NomadaPrint (Edición Gatito)',
-            precio: 3490,
-            // Asegúrate de que este archivo esté en tu GitHub
-            imagen: 'https://images-na.ssl-images-amazon.com/images/I/71R2o5j-PXL._AC_SL1500_.jpg', // Usando la URL de respaldo del fallback original como imagen principal
+            precio: 3490, 
+            imagen: './camara-principal.jpg', 
             descripcion: '¡La cámara que imprime sin tinta! Saca fotos, edítalas en la App y crea stickers al instante. El regalo creativo definitivo.',
             categoria: 'Regalo Inteligente',
         };
@@ -126,8 +131,7 @@
                             {/* IMAGEN PRINCIPAL */}
                             <img 
                                 src={product.imagen} 
-                                // Fallback para la imagen de la cámara si la principal no carga (usando una de las imágenes que subiste)
-                                onError={(e) => {e.target.onerror = null; e.target.src="https://m.media-amazon.com/images/I/51HRgfy8jiL._AC_SL1500_.jpg"}} 
+                                onError={(e) => {e.target.onerror = null; e.target.src="https://images-na.ssl-images-amazon.com/images/I/71R2o5j-PXL._AC_SL1500_.jpg"}} // Fallback si no subes la foto
                                 alt={product.nombre} 
                                 className="w-full object-contain hover:scale-105 transition-transform duration-700 ease-in-out"
                             />
@@ -157,7 +161,7 @@
 
                         <button 
                             onClick={() => onAdd(product)}
-                            className="w-full max-w-sm btn-primary text-white font-black text-xl px-8 py-5 rounded-2xl transition-all btn-hero hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-3"
+                            className="w-full max-w-sm bg-lime-500 text-white font-black text-xl px-8 py-5 rounded-2xl transition-all hover:bg-lime-600 hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-3"
                         >
                             <i className="ph ph-shopping-cart text-2xl"></i> Agregar al Carrito
                         </button>
@@ -182,42 +186,37 @@
                         <p className="text-slate-500">Conecta la App "Fun Print", elige tu foto e imprime en segundos.</p>
                     </div>
                     <div className="relative rounded-2xl overflow-hidden aspect-video bg-slate-100 shadow-inner group">
-                        {/* Se ajusta para usar el video de Youtube que subiste como fallback si no se sube el archivo local */}
-                        <iframe 
-                            className="w-full h-full object-cover absolute top-0 left-0"
-                            src="https://www.youtube.com/embed/2d2Nn8J8Y8M?si=b-uV45K32G9t4LwR&amp;controls=1" 
-                            title="YouTube video player" 
-                            frameBorder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                            referrerPolicy="strict-origin-when-cross-origin" 
-                            allowFullScreen
-                        ></iframe>
+                        {/* Asegúrate de subir video-promo.mp4 a tu github */}
+                        <video controls className="w-full h-full object-cover">
+                            <source src="./video-promo.mp4" type="video/mp4" />
+                            Tu navegador no soporta videos.
+                        </video>
                     </div>
                 </div>
             </section>
         );
 
-        // --- NUEVO: GALERÍA DE IMÁGENES (Imágenes Actualizadas) ---
+        // --- NUEVO: GALERÍA DE IMÁGENES ---
         const GallerySection = () => (
             <section className="py-16 px-4 container mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-                    {/* Tarjeta 1: Papel Largo (Usando imagen subida) */}
+                    {/* Tarjeta 1: Papel Largo */}
                     <div className="bg-white p-6 rounded-[2rem] shadow-lg border border-slate-100 flex flex-col md:flex-row items-center gap-6">
-                        <img src="https://m.media-amazon.com/images/I/51Ogrt7r+hL._AC_SL1500_.jpg" alt="Imprimiendo dibujos" className="w-32 h-32 md:w-48 md:h-48 object-cover rounded-2xl shadow-md rotate-3 hover:rotate-0 transition-all" />
+                        <img src="./camara-papel.jpg" onError={(e) => e.target.src="https://via.placeholder.com/150"} alt="Imprimiendo dibujos" className="w-32 h-32 md:w-48 md:h-48 object-cover rounded-2xl shadow-md rotate-3 hover:rotate-0 transition-all" />
                         <div>
-                            <h3 className="text-xl font-bold text-slate-800 mb-2">¡No solo fotos! Imprime Stickers 📸</h3>
+                            <h3 className="text-xl font-bold text-slate-800 mb-2">¡No solo fotos!</h3>
                             <p className="text-slate-600 text-sm leading-relaxed">
-                                Elige entre **más de 100 plantillas** en la App. Imprime listas, notas, códigos QR, etiquetas y más. ¡Tu imaginación es el límite!
+                                Imprime dibujos de animales, notas o listas. El papel es económico y fácil de conseguir. ¡Diversión interminable coloreando!
                             </p>
                         </div>
                     </div>
-                     {/* Tarjeta 2: Cámara Abierta (Usando imagen subida) */}
-                     <div className="bg-white p-6 rounded-[2rem] shadow-lg border border-slate-100 flex flex-col md:flex-row items-center gap-6">
-                        <img src="https://ae01.alicdn.com/kf/Hb47310e5c9674f858de570f423d1f7d30.avif" alt="Tecnología Térmica" className="w-32 h-32 md:w-48 md:h-48 object-cover rounded-2xl shadow-md -rotate-3 hover:rotate-0 transition-all" />
+                      {/* Tarjeta 2: Cámara Abierta */}
+                      <div className="bg-white p-6 rounded-[2rem] shadow-lg border border-slate-100 flex flex-col md:flex-row items-center gap-6">
+                        <img src="./camara-abierta.jpg" onError={(e) => e.target.src="https://via.placeholder.com/150"} alt="Tecnología Térmica" className="w-32 h-32 md:w-48 md:h-48 object-cover rounded-2xl shadow-md -rotate-3 hover:rotate-0 transition-all" />
                         <div>
-                            <h3 className="text-xl font-bold text-slate-800 mb-2">Cero Tinta = Cero Lío (Ecológico) ♻️</h3>
+                            <h3 className="text-xl font-bold text-slate-800 mb-2">Cero Tinta = Cero Lío</h3>
                             <p className="text-slate-600 text-sm leading-relaxed">
-                                Olvídate de cartuchos caros y contaminantes. Usa **tecnología térmica 100% segura** para los niños. ¡Solo recarga el papel y a imprimir!
+                                Olvídate de mancharte las manos o comprar cartuchos caros. Usa tecnología térmica segura para los niños. Recarga el papel y listo.
                             </p>
                         </div>
                     </div>
@@ -231,18 +230,18 @@
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center max-w-6xl mx-auto">
                     <BenefitCard 
                         icon="ph-film-strip" 
-                        title="Instantáneo y Sin Esperas" 
-                        text="Saca la foto y la tiene en la mano en **3 segundos**! La gratificación inmediata fomenta el interés por la fotografía." 
+                        title="Instantáneo" 
+                        text="¡Saca la foto y la tiene en la mano al instante! La gratificación inmediata mantiene la atención." 
                     />
                     <BenefitCard 
                         icon="ph-paint-brush-broad" 
-                        title="Doble Diversión: Foto + Color" 
-                        text="Cada foto se imprime en blanco y negro para que sea un **lienzo listo para colorear**. ¡Combina tecnología y creatividad!" 
+                        title="Creatividad Ilimitada" 
+                        text="Cada foto impresa en B/N es un lienzo. Fomenta el arte coloreando sus propias creaciones." 
                     />
                     <BenefitCard 
                         icon="ph-device-mobile-camera" 
-                        title="Conecta con tu Celular 📱" 
-                        text="Usa la App **'Fun Print'** para imprimir cualquier foto o documento de tu galería en segundos. ¡Máxima utilidad!" 
+                        title="Conecta tu Celular" 
+                        text="Usa la App 'Fun Print' para imprimir fotos de tu galería, notas adhesivas o etiquetas para el cole." 
                     />
                 </div>
             </section>
@@ -286,18 +285,6 @@
                 </div>
             </footer>
         );
-        
-        // --- NUEVO: BOTÓN DE WHATSAPP FLOTANTE ---
-        const FloatingWhatsappButton = () => (
-            <a 
-                href={`https://wa.me/${WHATSAPP}`} 
-                target="_blank" 
-                className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-[#25D366] text-white rounded-full flex items-center justify-center text-3xl shadow-xl hover:scale-105 active:scale-95 transition-transform"
-                title="Escríbenos por WhatsApp"
-            >
-                <i className="ph ph-whatsapp-logo"></i>
-            </a>
-        );
 
         // --- CARRITO Y CHECKOUT ---
         const CartSidebar = ({ isOpen, onClose, cart, updateQty, total, onCheckout }) => (
@@ -317,7 +304,7 @@
                         ) : (
                             cart.map(item => (
                                 <div key={item.id} className="flex gap-3 items-center bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
-                                    <img src={item.imagen} className="w-16 h-16 rounded-xl object-contain bg-slate-50" />
+                                    <img src={item.imagen} className="w-16 h-16 rounded-xl object-contain bg-slate-50" onError={(e) => e.target.src="https://via.placeholder.com/150"} />
                                     <div className="flex-1">
                                         <h4 className="font-bold text-slate-800 text-sm mb-1">{item.nombre}</h4>
                                         <p className="text-lime-600 font-bold text-sm">$U {(item.precio * item.cantidad).toLocaleString('es-UY')}</p>
@@ -336,7 +323,7 @@
                             <span className="text-sm text-slate-500 font-medium">Total</span>
                             <span className="text-3xl font-black text-slate-800">$U {total.toLocaleString('es-UY')}</span>
                         </div>
-                        <button onClick={onCheckout} disabled={cart.length === 0} className="w-full py-4 rounded-xl btn-primary text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2">
+                        <button onClick={onCheckout} disabled={cart.length === 0} className="w-full py-4 rounded-xl bg-lime-500 text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 hover:bg-lime-600">
                             <span>Procesar Pedido</span> <i className="ph ph-arrow-right font-bold"></i>
                         </button>
                     </div>
@@ -405,14 +392,12 @@
                     <AnimatedBackground />
                     <Navbar cartCount={cart.reduce((acc, el) => acc + el.cantidad, 0)} onOpenCart={() => setIsCartOpen(true)} />
                     
-                    {/* SECCIONES */}
                     <Hero product={PRODUCT_DATA} onAdd={addToCart} />
                     <VideoSection />
                     <GallerySection />
                     <BenefitsSection />
                     
                     <Footer />
-                    <FloatingWhatsappButton /> {/* BOTÓN FLOTANTE */}
                     
                     <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} cart={cart} updateQty={updateQty} total={totalCart} onCheckout={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }} />
                     <CheckoutModal isOpen={isCheckoutOpen} onClose={() => setIsCheckoutOpen(false)} cart={cart} total={totalCart} />
