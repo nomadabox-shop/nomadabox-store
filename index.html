@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOMADABOX | Future Shopping</title>
+    <title>Cámara Mágica NomadaPrint | Regalo Sin Pantallas 🎁</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2384cc16%22/><text y=%22.9em%22 font-size=%2290%22 x=%2250%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22 font-weight=%22bold%22>N</text></svg>">
     
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -11,8 +11,6 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -24,22 +22,18 @@
                     fontFamily: { sans: ['Outfit', 'sans-serif'] },
                     colors: {
                         lime: { 400: '#a3e635', 500: '#84cc16', 600: '#65a30d' },
+                        // Usamos un color secundario, por ejemplo, rosa o morado suave, para el toque 'gatito'
+                        pinkish: { 500: '#f472b6', 600: '#db2777' }, 
                     },
                     animation: {
                         'blob': 'blob 7s infinite',
                         'float': 'float 6s ease-in-out infinite',
+                        'pulse-sm': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     },
                     keyframes: {
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        }
+                        blob: { /* Mantener tu animación */ },
+                        float: { /* Mantener tu animación */ },
+                        pulse: { /* Mantener tu animación de Tailwind */ }, 
                     }
                 }
             }
@@ -48,11 +42,11 @@
     <style>
         body { background-color: #f0f2f5; overflow-x: hidden; }
         .glass-panel { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07); }
-        .glass-card { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); transition: all 0.4s ease; }
-        .glass-card:hover { background: rgba(255, 255, 255, 0.7); border-color: #84cc16; transform: translateY(-5px); box-shadow: 0 15px 30px -5px rgba(132, 204, 22, 0.2); }
         .btn-primary { background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%); box-shadow: 0 4px 15px rgba(132, 204, 22, 0.4); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Añadimos una animación más suave para el botón principal */
+        .btn-hero:hover { transform: scale(1.03); box-shadow: 0 10px 30px rgba(132, 204, 22, 0.6); }
     </style>
 </head>
 <body class="antialiased text-slate-800">
@@ -61,220 +55,189 @@
     <script type="text/babel">
         const { useState, useEffect, useMemo } = React;
 
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMwxXL0sZMSK-AVLVWjKuC8SW4s5IAUzescfV7F3i-25dwed9dz0IXF0Qydja1x4mzxmHvwO4B7I84/pub?gid=0&single=true&output=csv";
-        const WHATSAPP = "59895736428"; 
+        const WHATSAPP = "59895736428"; // Tu número de WhatsApp
         const INSTAGRAM_URL = "https://www.instagram.com/nomadabox_shop/";
 
-        // --- COMPONENTES ---
+        // --- DATOS DEL PRODUCTO (HARDCODEADO) ---
+        const PRODUCT_DATA = {
+            id: 'CATCAM001',
+            nombre: 'Cámara Mágica NomadaPrint (Edición Gatito)',
+            precio: 3490, // $U 3.490
+            imagen: 'URL_DE_LA_MEJOR_FOTO_DE_LA_CAMARA_GATITO', // **IMPORTANTE: Carga una imagen excelente (ej. fondo blanco limpio o un niño usándola)**
+            descripcion: 'Cámara de impresión térmica instantánea para niños, fomenta la creatividad sin usar pantallas. ¡Imprime y colorea al instante!',
+            categoria: 'Regalo Inteligente', // Único producto, pero mantenemos la estructura.
+        };
 
         const AnimatedBackground = () => (
             <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-lime-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-                <div className="absolute top-0 right-1/4 w-96 h-96 bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+                <div className="absolute top-0 right-1/4 w-96 h-96 bg-pinkish-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
             </div>
         );
 
-        const Navbar = ({ cartCount, onOpenCart, onOpenMobileMenu, categories, selectedCategory, onSelectCategory, onSearch, searchQuery }) => {
-            const [isSearchOpen, setIsSearchOpen] = useState(false);
-            const inputRef = React.useRef(null);
-
-            useEffect(() => {
-                if (isSearchOpen && inputRef.current) inputRef.current.focus();
-            }, [isSearchOpen]);
-
-            return (
-                <nav className="fixed top-0 w-full z-50 transition-all duration-300">
-                    <div className="glass-panel mx-2 md:mx-4 mt-2 md:mt-4 rounded-2xl px-4 md:px-6 py-3 md:py-4 flex justify-between items-center shadow-lg relative">
-                        
-                        {/* IZQUIERDA: Logo / Botón Móvil */}
-                        <div className="flex items-center gap-3 md:gap-6">
-                            <button 
-                                onClick={onOpenMobileMenu}
-                                className="w-10 h-10 rounded-xl bg-gradient-to-tr from-lime-500 to-lime-400 flex items-center justify-center text-white font-black text-xl shadow-lime-500/50 shadow-lg md:cursor-default hover:scale-105 active:scale-95 transition-transform"
-                            >
-                                N
-                            </button>
-                            
-                            {/* Desktop Category Links */}
-                            <div className="hidden md:flex gap-1 overflow-x-auto no-scrollbar max-w-md">
-                                <button 
-                                    onClick={() => onSelectCategory('Todas')}
-                                    className={`px-3 py-1 rounded-full text-sm font-bold transition-all ${selectedCategory === 'Todas' ? 'bg-lime-100 text-lime-700' : 'text-slate-500 hover:bg-slate-100'}`}
-                                >
-                                    Todas
-                                </button>
-                                {categories.map(cat => (
-                                    <button 
-                                        key={cat}
-                                        onClick={() => onSelectCategory(cat)}
-                                        className={`px-3 py-1 rounded-full text-sm font-bold transition-all whitespace-nowrap ${selectedCategory === cat ? 'bg-lime-100 text-lime-700' : 'text-slate-500 hover:bg-slate-100'}`}
-                                    >
-                                        {cat}
-                                    </button>
-                                ))}
-                            </div>
+        // --- NAVBAR (Simplificada) ---
+        const Navbar = ({ cartCount, onOpenCart }) => (
+            <nav className="fixed top-0 w-full z-50 transition-all duration-300">
+                <div className="glass-panel mx-2 md:mx-4 mt-2 md:mt-4 rounded-2xl px-4 md:px-6 py-3 md:py-4 flex justify-between items-center shadow-lg relative">
+                    
+                    {/* IZQUIERDA: Logo */}
+                    <div className="flex items-center gap-3 md:gap-6">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-lime-500 to-lime-400 flex items-center justify-center text-white font-black text-xl shadow-lime-500/50 shadow-lg">
+                            N
                         </div>
-
-                        {/* CENTRO: Logo Texto (Solo Mobile) */}
-                        <div className="md:hidden absolute left-1/2 transform -translate-x-1/2 font-black text-lg tracking-tighter">
-                            NOMADA<span className="text-lime-600">BOX</span>
-                        </div>
-
-                        {/* DERECHA: Acciones */}
-                        <div className="flex items-center gap-3">
-                            
-                            {/* Buscador Desktop */}
-                            <div className="hidden md:flex items-center relative">
-                                <div className={`overflow-hidden transition-all duration-300 ease-out ${isSearchOpen ? 'w-64 opacity-100 mr-2' : 'w-0 opacity-0'}`}>
-                                    <input 
-                                        ref={inputRef}
-                                        type="text" 
-                                        placeholder="Buscar..." 
-                                        value={searchQuery}
-                                        onChange={(e) => onSearch(e.target.value)}
-                                        onBlur={() => !searchQuery && setIsSearchOpen(false)}
-                                        className="w-full bg-slate-100 border-none rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-lime-500 outline-none"
-                                    />
-                                </div>
-                                <button 
-                                    onClick={() => setIsSearchOpen(!isSearchOpen)}
-                                    className="w-10 h-10 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-600 transition-colors"
-                                >
-                                    <i className={`ph ${isSearchOpen ? 'ph-x' : 'ph-magnifying-glass'} text-xl`}></i>
-                                </button>
-                            </div>
-
-                            {/* Badge Envío (Desktop) */}
-                            <span className="hidden lg:block text-[10px] font-bold bg-white/50 px-3 py-1.5 rounded-full border border-white/60 text-slate-500 uppercase tracking-wide">
-                                🚚 Envío Incluido
-                            </span>
-
-                            {/* Carrito */}
-                            <button 
-                                onClick={onOpenCart} 
-                                className="relative w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white border border-white flex items-center justify-center shadow-sm hover:shadow-md transition-all group"
-                            >
-                                <i className="ph ph-shopping-bag text-xl md:text-2xl text-slate-700 group-hover:text-lime-600 transition-colors"></i>
-                                {cartCount > 0 && (
-                                    <span className="absolute -top-1 -right-1 md:-top-2 md:-right-2 w-5 h-5 md:w-6 md:h-6 bg-lime-500 text-white text-[10px] md:text-xs font-bold rounded-full flex items-center justify-center shadow-lg animate-bounce border-2 border-white">
-                                        {cartCount}
-                                    </span>
-                                )}
-                            </button>
-                        </div>
-                    </div>
-                </nav>
-            );
-        };
-
-        const MobileMenu = ({ isOpen, onClose, categories, selectedCategory, onSelectCategory, onSearch, searchQuery }) => (
-            <div className={`fixed inset-0 z-[60] bg-white/95 backdrop-blur-xl transition-all duration-500 ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full pointer-events-none'}`}>
-                <div className="p-6 flex flex-col h-full">
-                    <div className="flex justify-between items-center mb-8">
-                        <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center text-white font-bold">N</div>
-                            <span className="font-black text-xl">Menú</span>
-                        </div>
-                        <button onClick={onClose} className="p-2 bg-slate-100 rounded-full"><i className="ph ph-x text-xl"></i></button>
+                        <span className="hidden md:block font-black text-xl tracking-tighter">NOMADA<span className="text-lime-600">BOX</span></span>
                     </div>
 
-                    <div className="mb-8">
-                        <div className="relative">
-                            <i className="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl"></i>
-                            <input 
-                                type="text" 
-                                placeholder="¿Qué estás buscando?" 
-                                value={searchQuery}
-                                onChange={(e) => onSearch(e.target.value)}
-                                className="w-full bg-slate-100 border-none rounded-2xl pl-12 pr-4 py-4 text-lg font-medium focus:ring-2 focus:ring-lime-500 outline-none"
+                    {/* DERECHA: Carrito (El único botón importante) */}
+                    <div className="flex items-center gap-3">
+                        <span className="hidden lg:block text-[10px] font-bold bg-white/50 px-3 py-1.5 rounded-full border border-white/60 text-slate-500 uppercase tracking-wide">
+                            🚚 Envío Incluido
+                        </span>
+
+                        <button 
+                            onClick={onOpenCart} 
+                            className="relative w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white border border-white flex items-center justify-center shadow-sm hover:shadow-md transition-all group"
+                        >
+                            <i className="ph ph-shopping-bag text-xl md:text-2xl text-slate-700 group-hover:text-lime-600 transition-colors"></i>
+                            {cartCount > 0 && (
+                                <span className="absolute -top-1 -right-1 md:-top-2 md:-right-2 w-5 h-5 md:w-6 md:h-6 bg-lime-500 text-white text-[10px] md:text-xs font-bold rounded-full flex items-center justify-center shadow-lg animate-pulse border-2 border-white">
+                                    {cartCount}
+                                </span>
+                            )}
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        );
+
+        // --- HERO SECTION (El centro de atención) ---
+        const Hero = ({ product, onAdd }) => (
+            <header className="pt-28 pb-16 px-4 container mx-auto text-center relative md:pt-40 md:pb-24">
+                
+                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-pinkish-100 text-pinkish-600 font-bold mb-6 animate-float">
+                    <i className="ph ph-sparkle text-lg"></i>
+                    <span className="text-sm uppercase tracking-wider">¡El Regalo del Año!</span>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center text-left max-w-5xl mx-auto">
+                    {/* IZQUIERDA: Imagen y Precio */}
+                    <div className="relative flex flex-col items-center md:items-start">
+                        <div className="w-full max-w-sm rounded-[3rem] overflow-hidden bg-white/70 shadow-2xl glass-panel p-6 mb-6">
+                            {/* **IMPORTANTE: Sustituye esta URL por tu imagen real** */}
+                            <img 
+                                src={product.imagen || 'https://images-na.ssl-images-amazon.com/images/I/71R2o5j-PXL._AC_SL1500_.jpg'} 
+                                alt={product.nombre} 
+                                className="w-full object-contain hover:scale-105 transition-transform duration-700 ease-in-out"
                             />
                         </div>
+                        
+                        <div className="flex flex-col items-center md:items-start">
+                            <h1 className="text-4xl md:text-5xl font-black mb-2 tracking-tight leading-none text-slate-800">
+                                {product.nombre}
+                            </h1>
+                            <p className="text-xl text-slate-600 font-light mb-4 max-w-md">{product.descripcion}</p>
+                            
+                            <div className="flex items-center justify-between w-full max-w-sm gap-4">
+                                <div>
+                                    <span className="text-sm font-bold text-lime-600 uppercase tracking-wider block">Precio Único (Envío Inc.)</span>
+                                    <span className="text-5xl font-black text-slate-800">$U {product.precio.toLocaleString('es-UY')}</span>
+                                </div>
+                                
+                                <button 
+                                    onClick={() => onAdd(product)}
+                                    className="btn-primary text-white font-black text-xl px-8 py-4 rounded-2xl transition-all btn-hero hover:scale-105 active:scale-95 whitespace-nowrap"
+                                >
+                                    <i className="ph ph-sparkle text-2xl mr-1"></i> Comprar Ahora
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
-                    <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Categorías</h3>
-                    <div className="flex flex-col gap-2 overflow-y-auto flex-1">
-                        <button 
-                            onClick={() => { onSelectCategory('Todas'); onClose(); }}
-                            className={`p-4 rounded-xl text-left font-bold text-lg transition-all ${selectedCategory === 'Todas' ? 'bg-lime-100 text-lime-700' : 'hover:bg-slate-50 text-slate-700'}`}
-                        >
-                            Todas los productos
-                        </button>
-                        {categories.map(cat => (
-                            <button 
-                                key={cat}
-                                onClick={() => { onSelectCategory(cat); onClose(); }}
-                                className={`p-4 rounded-xl text-left font-bold text-lg transition-all ${selectedCategory === cat ? 'bg-lime-100 text-lime-700' : 'hover:bg-slate-50 text-slate-700'}`}
-                            >
-                                {cat}
-                            </button>
-                        ))}
+                    {/* DERECHA: Argumentos de Venta Rápidos */}
+                    <div className="space-y-4 pt-10 md:pt-0">
+                        <FeatureBlock 
+                            icon="ph-palette" 
+                            title="¡Imprime y Colorea!" 
+                            description="La magia de la impresión térmica en B/N permite a los niños colorear sus fotos y desarrollar su creatividad." 
+                        />
+                        <FeatureBlock 
+                            icon="ph-thermometer-simple" 
+                            title="Cero Cartuchos. Cero Tinta." 
+                            description="Tecnología de impresión térmica. Solo usas papel, ahorrando cientos de pesos en costosos cartuchos de tinta." 
+                        />
+                        <FeatureBlock 
+                            icon="ph-shield-check" 
+                            title="Anti-Pantallas y Anti-Golpes" 
+                            description="Diseñada para resistir. Es el gadget perfecto para fomentar la actividad y alejar a los niños del celular." 
+                        />
+                        <FeatureBlock 
+                            icon="ph-truck" 
+                            title="Entrega Rápida en todo Uruguay" 
+                            description="Recibe tu NomadaPrint en 48hs en Montevideo y 72hs al interior. ¡Garantía de satisfacción NomadaBox!" 
+                        />
                     </div>
                 </div>
-            </div>
-        );
-
-        const Hero = () => (
-            <header className="pt-32 pb-10 px-4 container mx-auto text-center relative">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel mb-6 animate-float">
-                    <span className="w-2 h-2 rounded-full bg-lime-500 animate-pulse"></span>
-                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500">Envío Gratis • Todo Uruguay</span>
-                </div>
-                
-                <h2 className="text-4xl md:text-7xl font-black mb-4 tracking-tight leading-none text-slate-800">
-                    Tu mundo,<br/>
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-500 to-emerald-600">puesto en casa.</span>
-                </h2>
-                
-                <p className="text-lg md:text-xl text-slate-500 max-w-xl mx-auto mb-8 font-light leading-relaxed">
-                    Todo lo que necesitas, en la caja que te sigue. <br className="hidden md:block"/> Sin sorpresas, sin costos ocultos.
-                </p>
             </header>
         );
-
-        const ProductCard = ({ product, onAdd }) => (
-            <div className="glass-card rounded-[2rem] p-3 flex flex-col h-full relative group">
-                <div className="relative h-48 md:h-60 mb-3 rounded-[1.5rem] overflow-hidden bg-white">
-                    <img 
-                        src={product.imagen} 
-                        alt={product.nombre} 
-                        className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-700 ease-in-out"
-                        onError={(e) => { e.target.src = 'https://placehold.co/400x400/f1f5f9/94a3b8?text=Sin+Imagen'; }}
-                    />
-                    <div className="absolute top-3 left-3">
-                        <span className="px-2 py-1 bg-white/90 backdrop-blur rounded-lg text-[10px] font-bold text-slate-600 border border-slate-100 shadow-sm">
-                            {product.categoria}
-                        </span>
-                    </div>
+        
+        // Componente Auxiliar para las Features
+        const FeatureBlock = ({ icon, title, description }) => (
+            <div className="p-4 glass-panel rounded-2xl flex items-start gap-4 hover:shadow-lg transition-shadow">
+                <div className="w-12 h-12 rounded-xl bg-lime-100 text-lime-600 flex items-center justify-center text-2xl flex-shrink-0">
+                    <i className={`ph ${icon}`}></i>
                 </div>
-                
-                <div className="flex flex-col flex-grow px-1">
-                    <h3 className="text-lg md:text-xl font-bold text-slate-800 mb-1 leading-tight">{product.nombre}</h3>
-                    <div className="mt-auto flex items-end justify-between">
-                        <div>
-                            <span className="text-[10px] font-bold text-lime-600 uppercase tracking-wider block">Precio Final</span>
-                            <span className="text-2xl font-black text-slate-800">$U {parseInt(product.precio).toLocaleString('es-UY')}</span>
-                        </div>
-                        <button 
-                            onClick={() => onAdd(product)}
-                            className="w-10 h-10 md:w-12 md:h-12 rounded-xl btn-primary text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all"
-                        >
-                            <i className="ph ph-plus text-xl font-bold"></i>
-                        </button>
-                    </div>
+                <div>
+                    <h3 className="font-bold text-lg text-slate-800 mb-1 leading-tight">{title}</h3>
+                    <p className="text-sm text-slate-600">{description}</p>
                 </div>
             </div>
         );
+
+
+        // --- SECCIÓN DE ARGUMENTOS VISUALES (Sección Adicional) ---
+        const BenefitsSection = () => (
+            <section className="container mx-auto px-4 py-16">
+                <h2 className="text-3xl md:text-4xl font-black text-center mb-12">Por qué la NomadaPrint es el Mejor Regalo 🎁</h2>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <BenefitCard 
+                        icon="ph-film-strip" 
+                        title="Instantáneo" 
+                        text="¡Saca la foto y la tiene en la mano al instante! La gratificación inmediata mantiene la atención de los más pequeños." 
+                    />
+                    <BenefitCard 
+                        icon="ph-paint-brush-broad" 
+                        title="Creatividad Ilimitada" 
+                        text="Cada foto impresa en B/N es un lienzo. Fomenta el arte y la motricidad fina pintando sus propias creaciones." 
+                    />
+                    <BenefitCard 
+                        icon="ph-note-pencil" 
+                        title="Recuerdos Únicos" 
+                        text="No son fotos que se pierden en el celular. Son stickers y notas que pueden pegar en cuadernos y en su cuarto." 
+                    />
+                </div>
+            </section>
+        );
+
+        const BenefitCard = ({ icon, title, text }) => (
+            <div className="p-6 bg-white rounded-3xl shadow-xl border border-slate-100 hover:border-lime-300 transition-all transform hover:-translate-y-1">
+                <i className={`ph ${icon} text-5xl text-lime-600 mb-4 inline-block`}></i>
+                <h3 className="font-extrabold text-xl mb-3">{title}</h3>
+                <p className="text-slate-600">{text}</p>
+            </div>
+        );
+
 
         const Footer = () => (
             <footer className="mt-20 glass-panel border-t border-white/50 relative overflow-hidden">
                 <div className="container mx-auto px-6 py-12">
-                    {/* Sección Misión/Visión/Valores */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                        {/* Simplificamos el Footer y lo orientamos a la confianza */}
                         {[
-                            { t: "Misión", d: "Entregar soluciones prácticas y novedosas, eliminando barreras de envío.", i: "ph-flag-banner" },
-                            { t: "Visión", d: "Ser el referente online en Uruguay por transparencia y rapidez.", i: "ph-eye" },
-                            { t: "Valores", d: "Transparencia, Eficiencia e Ingenio práctico.", i: "ph-diamond" }
+                            { t: "Garantía", d: "100% Satisfacción o te devolvemos el dinero.", i: "ph-star" },
+                            { t: "Contacto Directo", d: "Respuesta inmediata por WhatsApp para tus dudas o pedidos.", i: "ph-whatsapp-logo" },
+                            { t: "Pago Seguro", d: "Aceptamos todas las tarjetas y métodos de pago de Uruguay (MercadoPago/Transferencia).", i: "ph-credit-card" }
                         ].map((item, idx) => (
                             <div key={idx} className="bg-white/40 p-6 rounded-3xl hover:bg-white/60 transition-colors border border-white/50">
                                 <div className="w-10 h-10 rounded-xl bg-lime-100 text-lime-600 flex items-center justify-center text-xl mb-3">
@@ -288,42 +251,40 @@
 
                     <div className="border-t border-slate-200/50 pt-8 text-center">
                         <h2 className="text-3xl font-black text-slate-800 mb-2">NOMADA<span className="text-lime-600">BOX</span></h2>
-                        <p className="text-slate-500 mb-6">Todo lo que necesitas, en la caja que te sigue.</p>
-                        
                         <a 
                             href={INSTAGRAM_URL} 
                             target="_blank"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-white rounded-full shadow-sm hover:shadow-md hover:text-pink-600 transition-all text-slate-600 font-bold text-sm"
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-white rounded-full shadow-sm hover:shadow-md hover:text-pinkish-600 transition-all text-slate-600 font-bold text-sm mt-4"
                         >
                             <i className="ph ph-instagram-logo text-xl"></i>
                             Seguinos en Instagram
                         </a>
-                        
                         <p className="text-xs text-slate-400 mt-8">© 2026 NomadaBox. Montevideo, Uruguay.</p>
                     </div>
                 </div>
             </footer>
         );
 
-        // --- COMPONENTES DEL CARRITO Y CHECKOUT (Misma lógica funcional) ---
+        // --- CARRITO Y CHECKOUT (Mismas funciones, adaptadas para un solo producto) ---
         const CartSidebar = ({ isOpen, onClose, cart, updateQty, total, onCheckout }) => (
             <>
+                {/* ... (el código de CartSidebar es el mismo, pero solo mostrará la cámara) ... */}
                 <div className={`fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] transition-opacity duration-500 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={onClose} />
                 <div className={`fixed top-0 right-0 h-full w-full max-w-md bg-white/90 backdrop-blur-xl z-[70] shadow-2xl transform transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) ${isOpen ? 'translate-x-0' : 'translate-x-full'} flex flex-col border-l border-white/50`}>
                     <div className="p-6 flex justify-between items-center bg-white/50">
-                        <h2 className="text-2xl font-black text-slate-800">Tu Caja</h2>
+                        <h2 className="text-2xl font-black text-slate-800">Tu Pedido</h2>
                         <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition"><i className="ph ph-x text-xl"></i></button>
                     </div>
                     <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar">
                         {cart.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full text-slate-400 opacity-60">
-                                <i className="ph ph-cube text-6xl mb-3"></i>
-                                <p>Caja vacía</p>
+                                <i className="ph ph-sparkle text-6xl mb-3"></i>
+                                <p>Aún no has añadido la Cámara Mágica.</p>
                             </div>
                         ) : (
                             cart.map(item => (
                                 <div key={item.id} className="flex gap-3 items-center bg-white p-2 rounded-2xl shadow-sm border border-slate-50">
-                                    <img src={item.imagen} className="w-16 h-16 rounded-xl object-contain bg-slate-50" />
+                                    <img src={item.imagen || 'https://images-na.ssl-images-amazon.com/images/I/71R2o5j-PXL._AC_SL1500_.jpg'} className="w-16 h-16 rounded-xl object-contain bg-slate-50" />
                                     <div className="flex-1">
                                         <h4 className="font-bold text-slate-800 text-sm mb-1">{item.nombre}</h4>
                                         <p className="text-lime-600 font-bold text-sm">$U {(item.precio * item.cantidad).toLocaleString('es-UY')}</p>
@@ -353,125 +314,91 @@
             const [data, setData] = useState({ name: '', id: '', address: '', phone: '' });
             const sendOrder = (e) => {
                 e.preventDefault();
-                let msg = `🚀 *NUEVO PEDIDO NOMADABOX*\n\n`;
+                let msg = `🚀 *NUEVO PEDIDO NOMADABOX - CÁMARA GATITO*\n\n`;
                 cart.forEach(i => msg += `📦 ${i.cantidad}x ${i.nombre}\n`);
                 msg += `\n💰 *TOTAL: $U ${total.toLocaleString('es-UY')}*\n\n📍 *Datos:*\n👤 ${data.name}\n🆔 ${data.id}\n🏠 ${data.address}\n📱 ${data.phone}`;
                 window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
+                // Puedes añadir un temporizador para limpiar el carrito después de enviar el pedido.
                 onClose();
             };
             return (
                 <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
+                    {/* ... (el código de CheckoutModal es el mismo) ... */}
                     <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onClick={onClose}></div>
                     <div className="bg-white w-full max-w-lg rounded-[2rem] p-8 relative z-10 shadow-2xl animate-blob">
                         <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-red-500"><i className="ph ph-x-circle text-3xl"></i></button>
-                        <h3 className="text-2xl font-black text-slate-800 mb-6">Finalizar Compra</h3>
+                        <h3 className="text-2xl font-black text-slate-800 mb-6">Confirma tu Compra por WhatsApp</h3>
                         <form onSubmit={sendOrder} className="space-y-4">
                             <input required type="text" className="w-full bg-slate-50 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-lime-500 outline-none" placeholder="Nombre Completo" onChange={e => setData({...data, name: e.target.value})} />
                             <div className="grid grid-cols-2 gap-4">
                                 <input required type="text" className="bg-slate-50 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-lime-500 outline-none" placeholder="C.I." onChange={e => setData({...data, id: e.target.value})} />
                                 <input required type="tel" className="bg-slate-50 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-lime-500 outline-none" placeholder="Celular" onChange={e => setData({...data, phone: e.target.value})} />
                             </div>
-                            <textarea required rows="2" className="w-full bg-slate-50 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-lime-500 outline-none" placeholder="Dirección completa" onChange={e => setData({...data, address: e.target.value})}></textarea>
-                            <button type="submit" className="w-full py-4 rounded-xl bg-[#25D366] text-white font-bold text-lg hover:bg-[#20bd5a] transition-all flex items-center justify-center gap-2"><i className="ph ph-whatsapp-logo text-xl"></i> Confirmar</button>
+                            <textarea required rows="2" className="w-full bg-slate-50 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-lime-500 outline-none" placeholder="Dirección completa (Calle, Nº, Ciudad/Barrio)" onChange={e => setData({...data, address: e.target.value})}></textarea>
+                            <button type="submit" className="w-full py-4 rounded-xl bg-[#25D366] text-white font-bold text-lg hover:bg-[#20bd5a] transition-all flex items-center justify-center gap-2"><i className="ph ph-whatsapp-logo text-xl"></i> ¡Finalizar y Enviar a WhatsApp!</button>
                         </form>
                     </div>
                 </div>
             );
         };
 
-        // --- APP MAIN ---
+        // --- APP MAIN (Simplificado) ---
         const App = () => {
-            const [products, setProducts] = useState([]);
             const [cart, setCart] = useState([]);
             const [isCartOpen, setIsCartOpen] = useState(false);
             const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-            const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-            const [loading, setLoading] = useState(true);
-            
-            // Estado para filtros
-            const [selectedCategory, setSelectedCategory] = useState('Todas');
-            const [searchQuery, setSearchQuery] = useState('');
 
-            useEffect(() => {
-                Papa.parse(SHEET_URL, {
-                    download: true, header: true,
-                    complete: (results) => {
-                        const cleanData = results.data.filter(i => i.nombre && i.precio).map(i => ({...i, id: i.id || Math.random(), precio: Number(i.precio)}));
-                        setProducts(cleanData);
-                        setLoading(false);
-                    }
-                });
-                setCart(JSON.parse(localStorage.getItem('nomadabox_cart') || '[]'));
-            }, []);
-
+            useEffect(() => setCart(JSON.parse(localStorage.getItem('nomadabox_cart') || '[]')), []);
             useEffect(() => localStorage.setItem('nomadabox_cart', JSON.stringify(cart)), [cart]);
 
+            // Función de Añadir al carrito simplificada, siempre añade el mismo producto
             const addToCart = (p) => {
                 setCart(prev => {
+                    // Usamos el ID del producto codificado
                     const exists = prev.find(item => item.id === p.id);
-                    return exists ? prev.map(item => item.id === p.id ? {...item, cantidad: item.cantidad + 1} : item) : [...prev, {...p, cantidad: 1}];
+                    const newCart = exists 
+                        ? prev.map(item => item.id === p.id ? {...item, cantidad: item.cantidad + 1} : item) 
+                        : [...prev, {...p, cantidad: 1}];
+                    return newCart;
                 });
-                setIsCartOpen(true);
+                setIsCartOpen(true); // Abre el carrito inmediatamente al añadir
             };
 
             const updateQty = (id, n) => setCart(prev => prev.map(p => p.id === id ? {...p, cantidad: Math.max(0, p.cantidad + n)} : p).filter(p => p.cantidad > 0));
 
-            // Lógica de Filtrado
-            const categories = useMemo(() => [...new Set(products.map(p => p.categoria))], [products]);
-            
-            const filteredProducts = products.filter(product => {
-                const matchesCategory = selectedCategory === 'Todas' || product.categoria === selectedCategory;
-                const matchesSearch = product.nombre.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                      product.descripcion.toLowerCase().includes(searchQuery.toLowerCase());
-                return matchesCategory && matchesSearch;
-            });
+            const totalCart = cart.reduce((acc, el) => acc + (el.precio * el.cantidad), 0);
 
             return (
                 <div className="min-h-screen relative font-sans text-slate-800 pb-20">
                     <AnimatedBackground />
                     
-                    <Navbar 
-                        cartCount={cart.reduce((acc, el) => acc + el.cantidad, 0)} 
-                        onOpenCart={() => setIsCartOpen(true)}
-                        onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
-                        categories={categories}
-                        selectedCategory={selectedCategory}
-                        onSelectCategory={setSelectedCategory}
-                        searchQuery={searchQuery}
-                        onSearch={setSearchQuery}
-                    />
+                    {/* El Navbar ya no necesita lógica de categorías */}
+                    <Navbar cartCount={cart.reduce((acc, el) => acc + el.cantidad, 0)} onOpenCart={() => setIsCartOpen(true)} />
 
-                    <MobileMenu 
-                        isOpen={isMobileMenuOpen}
-                        onClose={() => setIsMobileMenuOpen(false)}
-                        categories={categories}
-                        selectedCategory={selectedCategory}
-                        onSelectCategory={setSelectedCategory}
-                        searchQuery={searchQuery}
-                        onSearch={setSearchQuery}
-                    />
+                    {/* El Hero ahora es la página de producto */}
+                    <Hero product={PRODUCT_DATA} onAdd={addToCart} />
                     
-                    <Hero />
-                    
-                    <main className="container mx-auto px-4 relative z-10 min-h-[400px]">
-                        {loading ? (
-                            <div className="flex justify-center py-20"><div className="w-16 h-16 border-4 border-lime-200 border-t-lime-500 rounded-full animate-spin"></div></div>
-                        ) : filteredProducts.length === 0 ? (
-                            <div className="text-center py-20 opacity-60">
-                                <i className="ph ph-magnifying-glass text-6xl mb-4"></i>
-                                <p className="text-xl">No encontramos productos con esa búsqueda.</p>
-                                <button onClick={() => {setSearchQuery(''); setSelectedCategory('Todas')}} className="mt-4 text-lime-600 font-bold underline">Ver todos</button>
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
-                                {filteredProducts.map(p => <ProductCard key={p.id} product={p} onAdd={addToCart} />)}
-                            </div>
-                        )}
-                    </main>
+                    {/* Sección de Beneficios Adicional */}
+                    <BenefitsSection />
 
+                    {/* Eliminamos el <main> con el grid de productos y la lógica de carga/filtrado */}
+                    {/* El resto de la página es el Footer y los modales */}
+                    
                     <Footer />
-                    <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} cart={cart} updateQty={updateQty} total={cart.reduce((acc, el) => acc + (el.precio * el.cantidad), 0)} onCheckout={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }} />
-                    <CheckoutModal isOpen={isCheckoutOpen} onClose={() => setIsCheckoutOpen(false)} cart={cart} total={cart.reduce((acc, el) => acc + (el.precio * el.cantidad), 0)} />
+                    <CartSidebar 
+                        isOpen={isCartOpen} 
+                        onClose={() => setIsCartOpen(false)} 
+                        cart={cart} 
+                        updateQty={updateQty} 
+                        total={totalCart} 
+                        onCheckout={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }} 
+                    />
+                    <CheckoutModal 
+                        isOpen={isCheckoutOpen} 
+                        onClose={() => setIsCheckoutOpen(false)} 
+                        cart={cart} 
+                        total={totalCart} 
+                    />
                 </div>
             );
         };
